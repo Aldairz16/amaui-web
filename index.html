@@ -146,7 +146,7 @@
 
   /* Celular con la tienda real de Petite Lune, dentro del mockup de iPhone (512×908).
      Todas las medidas en cqw (ancho del dispositivo) para que pantalla, barra e isla escalen juntas. */
-  .device { position: relative; width: clamp(230px, min(24vw, 38svh), 310px); aspect-ratio: 512 / 908; container-type: inline-size; }
+  .device { position: relative; width: clamp(230px, min(24vw, 38svh), 310px); aspect-ratio: 512 / 908; container-type: inline-size; margin-bottom: -40px; /* el PNG incluye la sombra inferior */ }
   .device-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .device-screen { position: absolute; left: 18.75cqw; top: 12.5cqw; width: 62.5cqw; height: 135.9cqw; border-radius: 7.2cqw; overflow: hidden; background: #fff; z-index: 1; }
   /* Barra de estado de iOS: hora a la izquierda de la isla, señal, wifi y batería a la derecha */
