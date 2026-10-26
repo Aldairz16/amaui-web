@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AMAUI · Diseño y desarrollo web</title>
-<meta name="description" content="AMAUI es un equipo de diseño y desarrollo web. Transformamos ideas en experiencias digitales.">
+<title>AMAUI · La web de tu negocio, en tus manos</title>
+<meta name="description" content="Hacemos la web de tu negocio y te enseñamos a manejarla. Páginas y tiendas online con pagos y envíos, manual y videos para que la actualices sin depender de nadie.">
 <link rel="icon" type="image/png" href="assets/img/amaui-logo.png">
+<script>document.documentElement.classList.add("js")</script>
 <style>
   @font-face { font-family: "Geist"; src: url("assets/fonts/Geist-normal-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
   @font-face { font-family: "Geist Mono"; src: url("assets/fonts/GeistMono-normal-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
@@ -25,6 +26,11 @@
     --sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --serif: "Instrument Serif", ui-serif, Georgia, serif;
     --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    /* Movimiento: una curva y tres duraciones para toda la página */
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --t-fast: .2s;
+    --t-mid: .45s;
+    --t-slow: .8s;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -36,28 +42,31 @@
   img { max-width: 100%; height: auto; display: block; }
   a { color: inherit; }
   .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .serif { font-family: var(--serif); font-weight: 400; }
   .serif em, em.serif { font-style: italic; }
   h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -.02em; line-height: 1.05; }
   h2 { font-size: clamp(34px, 5.2vw, 64px); }
-  h2 em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -.01em; }
+  h2 em, h1 em, h3 em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -.01em; }
   section { padding: clamp(80px, 12vw, 160px) 0; border-top: 1px solid var(--line); scroll-margin-top: 68px; }
   :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 4px; }
   .skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--fg); color: var(--bg); padding: 12px 18px; border-radius: 8px; text-decoration: none; font-weight: 500; }
   .skip:focus { top: 12px; }
-  .section-head { display: grid; gap: 20px; margin-bottom: clamp(40px, 6vw, 72px); max-width: 760px; }
+  .section-head { display: grid; gap: 20px; margin-bottom: clamp(40px, 6vw, 72px); max-width: 780px; }
   .section-head p { color: var(--muted); margin: 0; font-size: 18px; }
 
   /* Nav */
   .nav {
     position: fixed; inset: 0 0 auto 0; z-index: 50;
-    transition: background .3s, border-color .3s;
+    transition: background var(--t-mid), border-color var(--t-mid), transform var(--t-mid) var(--ease);
     border-bottom: 1px solid transparent;
   }
+  .nav.hidden { transform: translateY(-100%); }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; background: var(--fg); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
   .nav.scrolled { background: rgba(7,7,7,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); }
   .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
   .brand { display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-weight: 600; letter-spacing: .18em; font-size: 14px; }
+  .brand img { width: 30px; height: 30px; }
   .nav-right { display: flex; align-items: center; gap: 8px; }
   .menu-toggle { display: none; width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer; align-items: center; justify-content: center; }
   .menu-toggle span, .menu-toggle span::before, .menu-toggle span::after { display: block; width: 16px; height: 1.5px; background: currentColor; position: relative; transition: transform .25s, background .25s; }
@@ -67,17 +76,19 @@
   .nav.open .menu-toggle span { background: transparent; }
   .nav.open .menu-toggle span::before { transform: translateY(5px) rotate(45deg); }
   .nav.open .menu-toggle span::after { transform: translateY(-5px) rotate(-45deg); }
-  .brand img { width: 30px; height: 30px; }
   .nav ul { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
-  .nav ul a { text-decoration: none; font-size: 14px; color: var(--muted); transition: color .2s; }
+  .nav ul a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; font-size: 14px; color: var(--muted); transition: color .2s; }
   .nav ul a:hover { color: var(--fg); }
+
   .btn {
-    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;
     border: 1px solid var(--fg); background: var(--fg); color: var(--bg);
-    padding: 12px 22px; border-radius: 999px; font-size: 15px; font-weight: 500;
-    transition: transform .2s, background .2s, color .2s; cursor: pointer; font-family: inherit;
+    padding: 12px 22px; min-height: 48px; border-radius: 999px; font-size: 15px; font-weight: 500;
+    transition: transform var(--t-fast) var(--ease), background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+    cursor: pointer; font-family: inherit; touch-action: manipulation;
   }
   .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: scale(.97); transition-duration: .08s; }
   .btn.ghost { background: transparent; color: var(--fg); border-color: var(--line-2); }
   .btn.ghost:hover { border-color: var(--fg); }
   .btn.sm { padding: 9px 18px; font-size: 14px; min-height: 44px; }
@@ -85,117 +96,163 @@
   .btn:hover .arrow { transform: translateX(3px); }
 
   /* Hero */
-  .hero { min-height: 100svh; display: grid; align-items: center; position: relative; padding: 120px 0 80px; overflow: hidden; border: 0; }
+  .hero { min-height: 100svh; display: grid; align-items: center; position: relative; padding: 112px 0 72px; overflow: hidden; border: 0; }
   .hero::before {
     content: ""; position: absolute; inset: 0;
     background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
     background-size: 72px 72px; opacity: .35;
-    mask-image: radial-gradient(ellipse 70% 60% at 70% 45%, #000 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 45%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 72% 50%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 72% 50%, #000 20%, transparent 75%);
   }
-  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.25fr .75fr; gap: 40px; align-items: center; }
-  .hero h1 { font-size: clamp(46px, 8.4vw, 116px); line-height: .98; letter-spacing: -.035em; }
-  .hero h1 em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -.01em; }
-  .hero .lead { color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); max-width: 520px; margin: 28px 0 40px; }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.2fr .8fr; gap: 48px; align-items: center; }
+  .hero h1 { font-size: clamp(40px, min(6vw, 10svh), 84px); line-height: 1; letter-spacing: -.035em; margin-top: 24px; }
+  .hero .lead { color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); max-width: 560px; margin: 28px 0 36px; }
   .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
-  .typed { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-bottom: 28px; min-height: 1.6em; }
-  .typed .caret { display: inline-block; width: 8px; height: 1.1em; background: var(--fg); vertical-align: -3px; margin-left: 2px; animation: blink 1s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-  .mark { position: relative; aspect-ratio: 1; width: 100%; max-width: 420px; justify-self: end; }
-  .mark img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 60px rgba(255,255,255,.12)); animation: float 9s ease-in-out infinite; }
-  .mark::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.08), transparent 70%); z-index: -1; }
-  @keyframes float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-14px) rotate(2deg); } }
-  .scroll-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); }
+  .hero-proof { justify-self: center; display: grid; justify-items: center; gap: 18px; transform: translate3d(var(--px, 0), var(--py, 0), 0); transition: transform .6s var(--ease); }
+  .proof-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14px; color: var(--muted); text-decoration: none; }
+  .proof-link b { color: var(--fg); font-weight: 500; }
+  .proof-link:hover { color: var(--fg); }
+  .scroll-hint { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; }
 
-  /* Marquee */
+  /* Celular con la tienda real de Petite Lune */
+  .phone-frame { width: clamp(200px, min(22vw, 34svh), 280px); aspect-ratio: 9 / 19; border-radius: 38px; border: 1px solid var(--line-2); padding: 10px; background: #111; box-shadow: 0 40px 100px rgba(0,0,0,.7), 0 0 80px rgba(255,255,255,.05), inset 0 0 0 1px rgba(255,255,255,.04); }
+  .phone-screen { position: relative; height: 100%; border-radius: 28px; overflow: hidden; background: #fff; }
+  .phone-screen img { position: absolute; top: 0; left: 0; width: 100%; height: auto; will-change: transform; }
+  .phone-screen::before { content: ""; position: absolute; z-index: 2; top: 8px; left: 50%; width: 72px; height: 20px; margin-left: -36px; border-radius: 999px; background: #111; }
+  .phone-screen.scrolling img { animation: phone-scroll 46s cubic-bezier(.45, 0, .55, 1) 1.6s infinite alternate; }
+  .phone-frame:hover .phone-screen img { animation-play-state: paused; }
+  @keyframes phone-scroll { to { transform: translate3d(0, calc(var(--travel, 0px) * -1), 0); } }
+
+  /* Cinta de tipos de negocio */
   .marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; padding: 22px 0; }
-  .marquee-track { display: flex; gap: 48px; width: max-content; animation: slide 38s linear infinite; }
+  .marquee-track { display: flex; gap: 48px; width: max-content; animation: slide 40s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
   .marquee span { font-family: var(--serif); font-style: italic; font-size: clamp(26px, 3.4vw, 40px); color: var(--muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 48px; }
   .marquee span::after { content: ""; width: 10px; height: 10px; border: 1px solid var(--dim); transform: rotate(45deg); }
   @keyframes slide { to { transform: translateX(-50%); } }
 
-  /* Servicios */
-  .services { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .service { padding: clamp(28px, 4vw, 48px); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; transition: background .3s; }
-  .service:hover { background: var(--bg-2); }
-  .service .num { font-family: var(--mono); font-size: 12px; color: var(--dim); }
-  .service h3 { font-size: clamp(24px, 2.6vw, 32px); margin: 36px 0 14px; }
-  .service p { color: var(--muted); margin: 0; max-width: 440px; }
-  .service ul { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .service li { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; color: var(--muted); }
+  /* Caso */
+  .case-top { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+  .case-top .pl { width: min(300px, 70vw); filter: invert(1); opacity: .92; }
+  .case-browser { border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden; background: var(--bg-2); box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+  .case-browser .bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .case-browser .dot { width: 10px; height: 10px; border-radius: 50%; background: #2a2a2a; }
+  .case-browser .url { margin-left: 12px; font-family: var(--mono); font-size: 13px; color: var(--muted); background: #171717; padding: 4px 14px; border-radius: 6px; }
+  .case-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .case-gallery img { border-radius: 10px; border: 1px solid var(--line); width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .case-browser img, .case-gallery img { transition: transform 1.2s var(--ease); }
+  .case-browser:hover img, .case-gallery img:hover { transform: scale(1.015); }
+  .case-body { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(32px, 6vw, 96px); margin-top: clamp(48px, 7vw, 88px); align-items: start; }
+  .case-body p { color: var(--muted); margin: 18px 0 28px; }
+  .results { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .result { background: var(--bg); padding: 26px 24px; }
+  .result b { display: block; font-size: clamp(36px, 4vw, 52px); font-weight: 500; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .result b.word { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+  .result p { margin: 12px 0 0; color: var(--fg); font-size: 15px; line-height: 1.45; }
+  .result small { display: block; margin-top: 6px; color: var(--muted); font-size: 14px; line-height: 1.4; }
+
+  /* Ofertas */
+  .offers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .offer { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; padding: clamp(26px, 3vw, 36px); background: var(--bg-2); display: flex; flex-direction: column; gap: 18px; transition: border-color var(--t-mid); }
+  .offer:hover { border-color: var(--line-2); }
+  .offer::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity var(--t-mid);
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.07), transparent 60%); }
+  .offer:hover::before { opacity: 1; }
+  .offer > * { position: relative; }
+  .offer .num { font-family: var(--mono); font-size: 13px; color: var(--dim); }
+  .offer h3 { font-size: clamp(24px, 2.4vw, 30px); transition: transform var(--t-mid) var(--ease); }
+  .offer:hover h3 { transform: translateX(4px); }
+  .offer .lede { color: var(--muted); margin: 0; }
+  .offer .ideal { font-size: 14px; color: var(--muted); border-left: 1px solid var(--line-2); padding-left: 12px; margin: 0; }
+  .offer .ideal b { color: var(--fg); font-weight: 500; }
+  .offer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 15px; }
+  .offer li { padding-left: 24px; position: relative; }
+  .offer li::before { content: ""; position: absolute; left: 2px; top: .45em; width: 9px; height: 5px; border-left: 1.5px solid var(--fg); border-bottom: 1.5px solid var(--fg); transform: rotate(-45deg); }
+  .offer .meta { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+  .offer .price { font-size: 20px; font-weight: 500; }
+  .offer .time { font-size: 14px; color: var(--muted); }
+
+  /* Qué te llevas */
+  .keeps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .keep { background: var(--bg); padding: 32px 28px 36px; }
+  .keep svg { width: 28px; height: 28px; stroke: var(--fg); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--t-slow) var(--ease); }
+  .keep:hover svg { transform: translateY(-3px) rotate(-6deg); }
+  .keep h3 { font-size: 21px; margin: 26px 0 10px; line-height: 1.2; }
+  .keep p { color: var(--muted); margin: 0; font-size: 15px; }
 
   /* Proceso */
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
   .step { background: var(--bg); padding: 32px 28px 40px; }
-  .step .serif { font-size: 56px; line-height: 1; color: var(--dim); font-style: italic; }
+  .step .serif { font-size: 56px; line-height: 1; color: var(--dim); font-style: italic; display: inline-block; transition: color var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
+  .step.in .serif { color: var(--fg); }
+  .step:hover .serif { transform: translateY(-4px); }
   .step h3 { font-size: 21px; margin: 28px 0 10px; }
   .step p { color: var(--muted); margin: 0; font-size: 15px; }
 
-  /* Caso */
-  .case-top { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
-  .case-top .pl { width: min(320px, 70vw); filter: invert(1); opacity: .92; }
-  .case-browser { border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden; background: var(--bg-2); box-shadow: 0 40px 120px rgba(0,0,0,.6); }
-  .case-browser .bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
-  .case-browser .dot { width: 10px; height: 10px; border-radius: 50%; background: #2a2a2a; }
-  .case-browser .url { margin-left: 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); background: #171717; padding: 4px 14px; border-radius: 6px; }
-  .case-gallery { display: grid; grid-template-columns: 1fr 1fr .62fr .62fr; gap: 16px; margin-top: 16px; }
-  .case-gallery img { border-radius: 10px; border: 1px solid var(--line); width: 100%; height: 100%; object-fit: cover; object-position: top; aspect-ratio: auto; }
-  .case-gallery .phone { border-radius: 18px; }
-  .case-body { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 96px); margin-top: clamp(48px, 7vw, 88px); }
-  .case-body p { color: var(--muted); margin: 18px 0 28px; }
-  .facts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-  .facts li { display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
-  .facts .k { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); padding-top: 4px; }
-
-  /* Proyectos */
-  .project { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; border: 1px solid var(--line); border-radius: 16px; padding: clamp(28px, 4vw, 56px); background: linear-gradient(135deg, var(--bg-2), var(--bg)); }
-  .project h3 { font-size: clamp(36px, 5vw, 64px); letter-spacing: -.03em; }
-  .project p { color: var(--muted); margin: 0; }
-  .tag { display: inline-block; font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; color: var(--muted); margin-bottom: 20px; }
-
-  .projects { display: grid; gap: 16px; }
-
-  /* Logros */
-  .awards { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-  .award { display: grid; grid-template-columns: 120px 1fr; gap: 32px; padding: 36px 0; border-bottom: 1px solid var(--line); }
-  .award .year { font-family: var(--serif); font-style: italic; font-size: 44px; line-height: 1; color: var(--dim); }
-  .award h3 { font-size: clamp(22px, 2.6vw, 30px); margin: 14px 0 10px; }
-  .award p { color: var(--muted); margin: 0; max-width: 720px; }
-  .badge { display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; background: var(--fg); color: var(--bg); border-radius: 999px; padding: 4px 12px; }
-
   /* Equipo */
   .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .member { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: var(--bg-2); transition: border-color .3s, transform .3s; }
-  .member:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  .member { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--bg-2); transition: border-color var(--t-mid); }
+  .member:hover { border-color: var(--line-2); }
+  .member .card { height: 100%; display: flex; flex-direction: column; transition: transform var(--t-mid) var(--ease); transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
   .member .photo { aspect-ratio: 1; overflow: hidden; background: #111; }
-  .member .photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: filter .5s, transform .6s; }
-  .member:hover .photo img { filter: none; transform: scale(1.03); }
+  .member .photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: filter .7s var(--ease), transform 1s var(--ease); }
+  .member:hover .photo img { filter: none; transform: scale(1.04); }
+  @media (hover: none) { .member.in .photo img { filter: none; transition-delay: .3s; } }
   .member .body { padding: 24px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
   .member h3 { font-size: 22px; }
-  .member .role { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-top: 6px; display: block; }
+  .member .role { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-top: 6px; display: block; }
   .member p { color: var(--muted); margin: 0; font-size: 15px; }
-  .member ul.hl { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
-  .member ul.hl li { padding-left: 18px; position: relative; color: var(--fg); }
-  .member ul.hl li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border: 1px solid var(--muted); transform: rotate(45deg); }
-  .member .skills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .member .skills span { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px 10px; color: var(--muted); }
   .member .li { margin-top: auto; min-height: 44px; align-self: flex-start; font-size: 14px; color: var(--muted); text-decoration: none; display: inline-flex; gap: 6px; align-items: center; }
   .member .li:hover { color: var(--fg); }
+
+  /* Sellos de logros */
+  .seals-title { margin: clamp(56px, 7vw, 88px) 0 24px; }
+  .seals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; list-style: none; padding: 0; margin: 0; }
+  .seal { border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 10px; align-content: start; }
+  .seal .badge { justify-self: start; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; background: var(--fg); color: var(--bg); border-radius: 999px; padding: 4px 12px; }
+  .seal h3 { font-size: 20px; line-height: 1.25; }
+  .seal p { color: var(--muted); margin: 0; font-size: 14px; }
+  .labs { margin: 24px 0 0; color: var(--muted); font-size: 15px; max-width: 760px; }
+  .labs b { color: var(--fg); font-weight: 500; }
+
+  /* Preguntas frecuentes */
+  .faq { border-top: 1px solid var(--line); max-width: 880px; }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; min-height: 64px; padding: 18px 0; font-size: clamp(18px, 2vw, 22px); font-weight: 500; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary .plus { flex: none; width: 32px; height: 32px; border: 1px solid var(--line-2); border-radius: 50%; position: relative; transition: transform var(--t-mid) var(--ease), background var(--t-mid); }
+  .faq summary .plus::before, .faq summary .plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; margin: -.75px 0 0 -6px; background: var(--fg); transition: transform var(--t-mid) var(--ease), background var(--t-mid); }
+  .faq summary .plus::after { transform: rotate(90deg); }
+  .faq details[open] .plus { transform: rotate(45deg); background: var(--fg); }
+  .faq details[open] .plus::before, .faq details[open] .plus::after { background: var(--bg); }
+  .faq .answer { color: var(--muted); padding: 0 56px 24px 0; margin: 0; }
+  .faq details[open] .answer { animation: faq-in var(--t-mid) var(--ease); }
+  @keyframes faq-in { from { opacity: 0; transform: translateY(-6px); } }
 
   /* Contacto */
   .contact { text-align: center; padding: clamp(100px, 14vw, 200px) 0; position: relative; overflow: hidden; }
   .contact h2 { font-size: clamp(44px, 8vw, 112px); letter-spacing: -.035em; }
-  .contact p { color: var(--muted); max-width: 520px; margin: 24px auto 40px; font-size: 18px; }
+  .contact p { color: var(--muted); max-width: 540px; margin: 24px auto 40px; font-size: 18px; }
   .contact .links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-  .pending { font-family: var(--mono); font-size: 13px; color: var(--dim); border: 1px dashed var(--line-2); border-radius: 999px; padding: 10px 20px; display: inline-block; }
-  .contact .bg-mark { position: absolute; width: 640px; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: .035; pointer-events: none; }
+  .contact .bg-mark { position: absolute; width: 640px; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(var(--spin, 0deg)); opacity: .035; pointer-events: none; }
 
   footer { border-top: 1px solid var(--line); padding: 32px 0; }
   footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--dim); }
 
-  /* Revelado al hacer scroll */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
-  .reveal.in { opacity: 1; transform: none; }
+  /* Revelado al hacer scroll. Solo se oculta si JS está activo, así el contenido nunca queda invisible */
+  .js .reveal { opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); transition-delay: var(--d, 0ms); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  .js .reveal-img { clip-path: inset(0 0 100% 0 round 14px); transition: clip-path 1.1s var(--ease); transition-delay: var(--d, 0ms); }
+  .js .reveal-img.in { clip-path: inset(0 0 0 0 round 14px); }
+  .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+  .w > span { display: inline-block; transition: transform var(--t-slow) var(--ease); transition-delay: calc(var(--i, 0) * 45ms + var(--d, 0ms)); }
+  .js .split:not(.in) .w > span { transform: translate3d(0, 105%, 0); }
+  .js .hero .intro { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); transition-delay: var(--d, 0ms); }
+  .js .hero.ready .intro { opacity: 1; transform: none; }
+  .js .hero .phone-in { opacity: 0; transform: translate3d(0, 40px, 0) rotate(4deg); transition: opacity 1.2s var(--ease), transform 1.4s var(--ease); transition-delay: .35s; }
+  .js .hero.ready .phone-in { opacity: 1; transform: none; }
+  .js .hero .scroll-hint { opacity: 0; transition: opacity var(--t-slow) var(--ease) 1.4s; }
+  .js .hero.ready .scroll-hint { opacity: 1; }
 
   @media (max-width: 900px) {
     .menu-toggle { display: inline-flex; }
@@ -208,46 +265,51 @@
     .nav.open ul { display: flex; }
     .nav.open { background: rgba(7,7,7,.96); border-color: var(--line); }
     .nav ul a { display: flex; align-items: center; min-height: 52px; font-size: 18px; color: var(--fg); border-bottom: 1px solid var(--line); }
-    .hero .wrap { grid-template-columns: 1fr; }
-    .mark { order: -1; max-width: 160px; justify-self: start; }
-    .services { grid-template-columns: 1fr; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 56px; }
+    .offers { grid-template-columns: 1fr; }
+    .keeps { grid-template-columns: 1fr 1fr; }
     .steps { grid-template-columns: 1fr 1fr; }
-    .case-gallery { grid-template-columns: 1fr 1fr; }
-    .case-gallery .desk { grid-column: span 2; }
-    .case-body, .project { grid-template-columns: 1fr; }
+    .case-gallery { grid-template-columns: 1fr; }
+    .case-body { grid-template-columns: 1fr; }
     .team { grid-template-columns: 1fr 1fr; }
-    .award { grid-template-columns: 1fr; gap: 12px; }
+    .seals { grid-template-columns: 1fr; }
+    .scroll-hint { display: none; }
   }
   @media (max-width: 640px) {
     .team { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
-    .steps { grid-template-columns: 1fr; }
-    .facts li { grid-template-columns: 1fr; gap: 4px; }
+    .keeps, .steps, .results { grid-template-columns: 1fr; }
     .nav .btn .label-long { display: none; }
-    .scroll-hint { display: none; }
+    .faq .answer { padding-right: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal { opacity: 1; transform: none; }
+    .js .reveal, .js .hero .intro, .js .hero .phone-in, .js .hero .scroll-hint { opacity: 1; }
+    .js .reveal, .js .hero .intro, .js .hero .phone-in { transform: none; }
+    .js .reveal-img { clip-path: none; }
+    .js .split .w > span { transform: none; }
+    .progress { display: none; }
   }
 </style>
 </head>
 <body>
 
-<a href="#servicios" class="skip">Saltar al contenido</a>
+<a href="#trabajo" class="skip">Saltar al contenido</a>
+<div class="progress" aria-hidden="true"></div>
 
 <nav class="nav" id="nav" aria-label="Principal">
   <div class="wrap">
     <a href="#inicio" class="brand"><img src="assets/img/amaui-logo.png" width="30" height="30" alt="">AMAUI</a>
     <ul id="menu">
-      <li><a href="#servicios">Servicios</a></li>
       <li><a href="#trabajo">Trabajo</a></li>
-      <li><a href="#logros">Logros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
       <li><a href="#equipo">Equipo</a></li>
+      <li><a href="#preguntas">Preguntas</a></li>
     </ul>
     <div class="nav-right">
-      <a href="#contacto" class="btn sm"><span>Cotiza<span class="label-long"> tu web</span></span> <span class="arrow">→</span></a>
+      <a href="#contacto" class="btn sm" data-cta><span>Escríbenos<span class="label-long"> hoy</span></span> <span class="arrow">→</span></a>
       <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span></button>
     </div>
   </div>
@@ -256,58 +318,147 @@
 <header class="hero" id="inicio">
   <div class="wrap">
     <div>
-      <div class="typed" aria-hidden="true"><span id="typed"></span><span class="caret"></span></div>
-      <h1>Transformamos ideas en <em>experiencias digitales.</em></h1>
-      <p class="lead">Somos AMAUI, un equipo de diseño y desarrollo web. Creamos páginas y tiendas online modernas, rápidas y fáciles de administrar para negocios reales.</p>
-      <div class="ctas">
-        <a href="#contacto" class="btn">Cotiza tu página web <span class="arrow">→</span></a>
-        <a href="#trabajo" class="btn ghost">Ver nuestro trabajo</a>
+      <span class="eyebrow intro">Diseño y desarrollo web · Chimbote, Perú</span>
+      <h1 class="split">Hacemos la web de tu negocio <em>y te enseñamos a manejarla.</em></h1>
+      <p class="lead intro" style="--d:700ms">Diseñamos tu página o tienda online, la dejamos funcionando con pagos y envíos, y te entregamos un manual y videos para que la actualices sin depender de nadie.</p>
+      <div class="ctas intro" style="--d:850ms">
+        <a href="#contacto" class="btn" data-cta data-cta-long>Cotiza tu web <span class="arrow">→</span></a>
+        <a href="#trabajo" class="btn ghost">Ver un caso real</a>
       </div>
     </div>
-    <div class="mark"><img src="assets/img/amaui-logo.png" width="1024" height="1024" alt="Logotipo de AMAUI"></div>
+    <div class="hero-proof">
+      <div class="phone-in">
+        <div class="phone-frame" role="img" aria-label="La tienda online de Petite Lune vista en un celular">
+          <div class="phone-screen"><img id="phone-page" src="assets/img/pl-mob_home_long.jpg" width="420" height="4307" alt=""></div>
+        </div>
+      </div>
+      <a href="#trabajo" class="proof-link intro" style="--d:1100ms"><span><b>petitelune.pe</b> · tienda hecha por AMAUI</span> <span class="arrow">↓</span></a>
+    </div>
   </div>
-  <a href="#servicios" class="scroll-hint eyebrow" style="text-decoration:none">↓ Desliza</a>
+  <a href="#trabajo" class="scroll-hint eyebrow">↓ Desliza</a>
 </header>
 
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>Diseño web</span><span>Desarrollo web</span><span>Tiendas online</span><span>Experiencias digitales</span>
-    <span>Diseño web</span><span>Desarrollo web</span><span>Tiendas online</span><span>Experiencias digitales</span>
+    <span>Restaurantes</span><span>Clínicas</span><span>Tiendas</span><span>Profesionales</span><span>Emprendimientos</span>
+    <span>Restaurantes</span><span>Clínicas</span><span>Tiendas</span><span>Profesionales</span><span>Emprendimientos</span>
   </div>
 </div>
+
+<section id="trabajo">
+  <div class="wrap">
+    <div class="case-top reveal">
+      <div class="section-head" style="margin:0">
+        <span class="eyebrow">01 — Un caso real</span>
+        <h2>Una marca artesanal, <em>vendiendo en todo el Perú.</em></h2>
+      </div>
+      <img class="pl" src="assets/img/pl-wordmark.png" width="1810" height="256" alt="Petite Lune">
+    </div>
+
+    <div class="case-browser reveal-img">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">petitelune.pe</span></div>
+      <img src="assets/img/pl-desk_home_hero.jpg" width="1600" height="953" alt="Portada de la tienda online de Petite Lune" loading="lazy">
+    </div>
+    <div class="case-gallery">
+      <img class="reveal-img" src="assets/img/pl-desk_producto_mate.jpg" width="1600" height="953" alt="Ficha de un journal personalizable de Petite Lune" loading="lazy">
+      <img class="reveal-img" src="assets/img/pl-desk_coleccion_memory.jpg" width="1600" height="953" alt="Colección Memory Journal de Petite Lune" loading="lazy">
+    </div>
+
+    <div class="case-body">
+      <div class="reveal">
+        <h3 style="font-size:clamp(26px,3vw,36px)">Petite Lune</h3>
+        <p>Marca peruana de agendas y journals personalizados. Su tienda vivía en WordPress; la pasamos a Shopify, rediseñamos la experiencia de compra y dejamos a la dueña lista para manejarla por su cuenta.</p>
+        <a class="btn ghost" href="https://petitelune.pe" target="_blank" rel="noopener">Visitar petitelune.pe <span class="arrow">↗</span></a>
+      </div>
+      <div class="results">
+        <div class="result reveal"><b data-count="113">113</b><p>No perdió sus visitas de Google al cambiar de plataforma.</p><small>Enlaces antiguos redirigidos a la tienda nueva.</small></div>
+        <div class="result reveal"><b data-count="26">26</b><p>Vende y envía a todas las regiones del Perú.</p><small>Cada región con su tarifa de envío.</small></div>
+        <div class="result reveal"><b class="word">Tarjeta</b><p>Cobra con tarjeta y Mercado Pago.</p><small>Pagos configurados y probados.</small></div>
+        <div class="result reveal"><b class="word">Sola</b><p>Maneja pedidos, productos y fotos sin depender de nadie.</p><small>Con un manual y videos de su propia tienda.</small></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="servicios">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">01 — Servicios</span>
-      <h2>Todo lo que tu negocio necesita para <em>estar en línea.</em></h2>
-      <p>Diseñamos, desarrollamos y te dejamos listo para administrar tu web sin depender de nadie.</p>
+      <span class="eyebrow">02 — Qué podemos hacer por ti</span>
+      <h2>Elige lo que tu negocio <em>necesita hoy.</em></h2>
+      <p>Te explicamos todo en simple y te enviamos la cotización por escrito antes de empezar.</p>
     </div>
-    <div class="services">
-      <article class="service reveal">
+    <div class="offers">
+      <article class="offer reveal">
         <span class="num">/01</span>
-        <h3>Diseño web</h3>
-        <p>Interfaces claras que cuentan la historia de tu marca y guían a tus clientes hacia la acción.</p>
-        <ul><li>UI / UX</li><li>Identidad digital</li><li>Prototipos</li></ul>
+        <h3>Página para tu negocio</h3>
+        <p class="lede">Para que te encuentren en Google y te escriban directo.</p>
+        <p class="ideal"><b>Ideal para</b> restaurantes, clínicas, consultorios y profesionales.</p>
+        <ul>
+          <li>Quiénes son, qué ofrecen y dónde están</li>
+          <li>Botón de WhatsApp y mapa</li>
+          <li>Se ve bien en el celular</li>
+          <li>Lista para aparecer en Google</li>
+        </ul>
+        <div class="meta"><span class="price" data-price="pagina">Cotización a medida</span><span class="time" data-time="pagina">Plazo según tu proyecto</span></div>
       </article>
-      <article class="service reveal">
+      <article class="offer reveal">
         <span class="num">/02</span>
-        <h3>Desarrollo web</h3>
-        <p>Sitios rápidos y adaptados a cualquier pantalla: celular, tablet o computadora.</p>
-        <ul><li>Responsive</li><li>Rendimiento</li><li>SEO base</li></ul>
+        <h3>Tienda online</h3>
+        <p class="lede">Para vender a cualquier hora, en cualquier parte del Perú.</p>
+        <p class="ideal"><b>Ideal para</b> marcas, emprendimientos y tiendas con productos propios.</p>
+        <ul>
+          <li>Catálogo, carrito y pago en línea</li>
+          <li>Tarjeta y Mercado Pago</li>
+          <li>Tarifas de envío por región</li>
+          <li>Manual y videos de tu tienda</li>
+        </ul>
+        <div class="meta"><span class="price" data-price="tienda">Cotización a medida</span><span class="time" data-time="tienda">Plazo según tu proyecto</span></div>
       </article>
-      <article class="service reveal">
+      <article class="offer reveal">
         <span class="num">/03</span>
-        <h3>Tiendas online</h3>
-        <p>Catálogo, carrito, pagos y envíos configurados para que empieces a vender en línea.</p>
-        <ul><li>Shopify</li><li>Pasarelas de pago</li><li>Migraciones</li></ul>
+        <h3>Mudanza o rediseño</h3>
+        <p class="lede">¿Ya tienes una web que no te funciona? La pasamos a una plataforma nueva.</p>
+        <p class="ideal"><b>Ideal para</b> negocios con una web vieja, lenta o difícil de actualizar.</p>
+        <ul>
+          <li>Pasamos tus productos y contenido</li>
+          <li>Sin perder tus visitas de Google</li>
+          <li>Diseño renovado</li>
+          <li>Te enseñamos a usar la nueva</li>
+        </ul>
+        <div class="meta"><span class="price" data-price="mudanza">Cotización a medida</span><span class="time" data-time="mudanza">Plazo según tu proyecto</span></div>
       </article>
-      <article class="service reveal">
-        <span class="num">/04</span>
-        <h3>Acompañamiento</h3>
-        <p>Manuales y capacitación para que tú mismo actualices productos, textos e imágenes.</p>
-        <ul><li>Manuales</li><li>Videos guía</li><li>Soporte</li></ul>
-      </article>
+    </div>
+  </div>
+</section>
+
+<section id="te-llevas">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">03 — Qué te llevas</span>
+      <h2>Tu web es tuya, <em>de verdad.</em></h2>
+      <p>No te dejamos atado a nosotros. Cuando terminamos, todo queda en tus manos.</p>
+    </div>
+    <div class="keeps">
+      <div class="keep reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M15 8l2 2"/></svg>
+        <h3>Dominio y cuentas a tu nombre</h3>
+        <p>Tu dirección web, tu tienda y tus accesos son tuyos desde el primer día.</p>
+      </div>
+      <div class="keep reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12M9 8h5"/></svg>
+        <h3>Manual y videos de tu propia web</h3>
+        <p>Paso a paso, con capturas de tu web, no de un ejemplo genérico.</p>
+      </div>
+      <div class="keep reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+        <h3>Te enseñamos a usarla</h3>
+        <p>Una sesión contigo para actualizar productos, textos y fotos.</p>
+      </div>
+      <div class="keep reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+        <h3>Acompañamiento después</h3>
+        <p data-support>Seguimos cerca después de publicar para resolver tus dudas.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -315,132 +466,100 @@
 <section id="proceso">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">02 — Proceso</span>
+      <span class="eyebrow">04 — Cómo trabajamos</span>
       <h2>De la idea a la web, <em>paso a paso.</em></h2>
     </div>
     <div class="steps">
-      <div class="step reveal"><span class="serif">01</span><h3>Escuchamos</h3><p>Entendemos tu negocio, tus clientes y lo que necesitas lograr.</p></div>
-      <div class="step reveal"><span class="serif">02</span><h3>Diseñamos</h3><p>Proponemos la estructura y el diseño, y los ajustamos contigo.</p></div>
-      <div class="step reveal"><span class="serif">03</span><h3>Desarrollamos</h3><p>Construimos y probamos la web en todas las pantallas antes de publicarla.</p></div>
-      <div class="step reveal"><span class="serif">04</span><h3>Acompañamos</h3><p>Te enseñamos a administrarla y seguimos cerca después del lanzamiento.</p></div>
+      <div class="step reveal"><span class="serif">01</span><h3>Conversamos</h3><p>Nos cuentas de tu negocio, tus clientes y lo que quieres lograr.</p></div>
+      <div class="step reveal"><span class="serif">02</span><h3>Te proponemos</h3><p>Te mostramos cómo se verá tu web y la ajustamos contigo.</p></div>
+      <div class="step reveal"><span class="serif">03</span><h3>La construimos</h3><p>La armamos y la probamos en celular y computadora antes de publicarla.</p></div>
+      <div class="step reveal"><span class="serif">04</span><h3>Te la entregamos</h3><p>Te enseñamos a manejarla y te dejamos todo a tu nombre.</p></div>
     </div>
-  </div>
-</section>
-
-<section id="trabajo">
-  <div class="wrap">
-    <div class="case-top reveal">
-      <div class="section-head" style="margin:0">
-        <span class="eyebrow">03 — Caso de estudio</span>
-        <h2>Una marca artesanal, <em>ahora en Shopify.</em></h2>
-      </div>
-      <img class="pl" src="assets/img/pl-wordmark.png" width="1810" height="256" alt="Petite Lune">
-    </div>
-
-    <div class="case-browser reveal">
-      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">petitelune.pe</span></div>
-      <img src="assets/img/pl-desk_home_hero.jpg" width="1600" height="953" alt="Portada de la tienda online de Petite Lune" loading="lazy">
-    </div>
-    <div class="case-gallery">
-      <img class="desk reveal" src="assets/img/pl-desk_producto_mate.jpg" width="1600" height="953" alt="Ficha de producto de Petite Lune en computadora" loading="lazy">
-      <img class="desk reveal" src="assets/img/pl-desk_coleccion_memory.jpg" width="1600" height="953" alt="Colección Memory Journal en computadora" loading="lazy">
-      <img class="phone reveal" src="assets/img/pl-mob_producto_mate.jpg" width="790" height="1600" alt="Ficha de producto en celular" loading="lazy">
-      <img class="phone reveal" src="assets/img/pl-mob_coleccion_memory.jpg" width="790" height="1600" alt="Colección en celular" loading="lazy">
-    </div>
-
-    <div class="case-body">
-      <div class="reveal">
-        <h3 style="font-size:clamp(26px,3vw,36px)">Petite Lune</h3>
-        <p>Marca peruana de agendas y journals personalizados. Llevamos su tienda de WordPress a Shopify, rediseñamos la experiencia de compra y dejamos a la clienta lista para administrarla por su cuenta.</p>
-        <a class="btn ghost" href="https://petitelune.pe" target="_blank" rel="noopener">Visitar petitelune.pe <span class="arrow">↗</span></a>
-      </div>
-      <ul class="facts reveal">
-        <li><span class="k">Migración</span><span>De WordPress / WooCommerce a Shopify, con 113 redirecciones para conservar las URLs anteriores.</span></li>
-        <li><span class="k">Producto</span><span>Journals personalizables: el cliente elige el nombre a grabar y el tipo de letra.</span></li>
-        <li><span class="k">Ventas</span><span>Pagos con tarjeta y Mercado Pago; tarifas de envío para las 26 regiones del Perú.</span></li>
-        <li><span class="k">Autonomía</span><span>Manual y videos guía para que la marca gestione pedidos, productos y contenido.</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="proyectos">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">04 — Proyectos propios</span>
-      <h2>También creamos <em>nuestras propias ideas.</em></h2>
-    </div>
-    <div class="projects">
-      <article class="project reveal">
-        <div>
-          <span class="tag">StartUp UTP 2026</span>
-          <h3>AMAY</h3>
-        </div>
-        <p>Plataforma de salud preventiva para adultos de 50 a 70 años en Chimbote, enfocada en construir una cultura de prevención. Competimos con ella en StartUp UTP 2026 con un Business Plan de 61 páginas.</p>
-      </article>
-      <article class="project reveal">
-        <div>
-          <span class="tag">Hackathon Becas BCP 2026</span>
-          <h3>Laboral BCP</h3>
-        </div>
-        <p>MVP con inteligencia artificial para la empleabilidad de estudiantes y egresados: diagnostica el perfil, mejora el CV, prepara entrevistas con feedback de IA y conecta con ofertas afines.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="logros">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">05 — Logros</span>
-      <h2>Competimos, aprendemos <em>y volvemos a competir.</em></h2>
-      <p>Hackatones y concursos de innovación en los que hemos participado como equipo.</p>
-    </div>
-    <ol class="awards">
-      <li class="award reveal">
-        <span class="year">2026</span>
-        <div>
-          <span class="badge">Finalista · Top 4</span>
-          <h3>Hackatón Plateada 2026</h3>
-          <p>Universidad del Pacífico, Emprende UP e Innova UP con BID Lab. Más de 80 postulaciones de 26 universidades y 13 regiones; los cuatro finalistas viajamos a una inmersión presencial en Lima con mentorías y validación.</p>
-        </div>
-      </li>
-      <li class="award reveal">
-        <span class="year">2026</span>
-        <div>
-          <span class="badge">Fase II</span>
-          <h3>StartUp UTP 2026</h3>
-          <p>Concurso de startups de la UTP. Presentamos AMAY y entregamos el Business Plan al jurado; el pitch final es en diciembre de 2026.</p>
-        </div>
-      </li>
-      <li class="award reveal">
-        <span class="year">2026</span>
-        <div>
-          <span class="badge">Participación</span>
-          <h3>Hackathon Becas BCP 2026</h3>
-          <p>Centro de Innovación BCP y Becas BCP. Desarrollamos Laboral BCP y lo presentamos en un pitch en video de 5 minutos.</p>
-        </div>
-      </li>
-      <li class="award reveal">
-        <span class="year">2025</span>
-        <div>
-          <span class="badge">2.º lugar nacional</span>
-          <h3>1.ª Hackathon Ambiental UTP–NGR</h3>
-          <p>Con EcoPoint, una PWA con guía de reciclaje interactiva y gamificación para incentivar prácticas sostenibles. Segundo lugar entre 36 equipos.</p>
-        </div>
-      </li>
-    </ol>
   </div>
 </section>
 
 <section id="equipo">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">06 — Equipo</span>
-      <h2>Las personas <em>detrás de AMAUI.</em></h2>
-      <p>Nacimos como equipo en una hackathon y seguimos construyendo juntos: producto, diseño y desarrollo bajo un mismo techo.</p>
+      <span class="eyebrow">05 — Quiénes somos</span>
+      <h2>Tres personas, <em>un mismo equipo.</em></h2>
+      <p>Nacimos como equipo en una hackathon. Hoy hacemos webs para negocios reales y seguimos compitiendo para aprender.</p>
     </div>
-    <div class="team" id="team"></div>
+    <div class="team">
+      <article class="member reveal">
+        <div class="card">
+          <div class="photo"><img src="assets/img/team-aldair.jpg" width="400" height="400" alt="Aldair Pacherrez" loading="lazy"></div>
+          <div class="body">
+            <div><h3>Aldair Pacherrez</h3><span class="role">Producto y proyectos</span></div>
+            <p>Organiza cada proyecto de principio a fin: entiende lo que necesitas, planifica las entregas y revisa que todo funcione antes de publicar. Coordinó la tienda de Petite Lune.</p>
+            <a class="li" href="https://www.linkedin.com/in/aldairpacherrez/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+      <article class="member reveal">
+        <div class="card">
+          <div class="photo"><img src="assets/img/team-anderson.jpg" width="400" height="400" alt="Jean Carlos Anderson Espinoza" loading="lazy"></div>
+          <div class="body">
+            <div><h3>Jean Carlos Anderson Espinoza</h3><span class="role">Diseño y frontend</span></div>
+            <p>Diseña cómo se ve y cómo se usa tu web, y la construye para que funcione en cualquier pantalla. Diseñó AMAY, una app pensada para personas mayores de 50 años.</p>
+            <a class="li" href="https://www.linkedin.com/in/anderson-espinoza/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+      <article class="member reveal">
+        <div class="card">
+          <div class="photo"><img src="assets/img/team-jose.jpg" width="400" height="400" alt="Jose Hurtado Rivas" loading="lazy"></div>
+          <div class="body">
+            <div><h3>Jose Hurtado Rivas</h3><span class="role">Backend y arquitectura</span></div>
+            <p>Se encarga de lo que no se ve: que tu web sea segura, rápida y fácil de mantener. Ha trabajado en sistemas para el sector público peruano.</p>
+            <a class="li" href="https://www.linkedin.com/in/jose-hurtado-rivas-8150b0231/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p class="eyebrow seals-title reveal">Reconocimientos del equipo</p>
+    <ul class="seals">
+      <li class="seal reveal"><span class="badge">Finalistas · Top 4</span><h3>Hackatón Plateada 2026</h3><p>Universidad del Pacífico con BID Lab. Más de 80 postulaciones de 26 universidades.</p></li>
+      <li class="seal reveal"><span class="badge">2.º lugar nacional</span><h3>Hackathon Ambiental UTP–NGR 2025</h3><p>Con EcoPoint, entre 36 equipos.</p></li>
+      <li class="seal reveal"><span class="badge">Fase II</span><h3>StartUp UTP 2026</h3><p>Con AMAY, nuestro proyecto de salud preventiva.</p></li>
+    </ul>
+    <p class="labs reveal"><b>También creamos productos propios</b> con inteligencia artificial y salud digital, como AMAY y Laboral BCP. Lo que aprendemos ahí lo aplicamos en las webs de nuestros clientes.</p>
+  </div>
+</section>
+
+<section id="preguntas">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">06 — Preguntas frecuentes</span>
+      <h2>Lo que nos preguntan <em>antes de empezar.</em></h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>¿Cuánto cuesta?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">Depende de lo que necesites: no cuesta lo mismo una página informativa que una tienda con pagos y envíos. Conversamos, y te enviamos la cotización por escrito antes de empezar, sin compromiso.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto demora?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">Te damos el plazo junto con la cotización, según el tamaño de tu web y lo que haga falta preparar (fotos, textos, productos).</p>
+      </details>
+      <details>
+        <summary>¿Necesito saber de tecnología?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">No. Nosotros nos encargamos de la parte técnica y, al terminar, te dejamos un manual y videos de tu propia web para que puedas actualizarla.</p>
+      </details>
+      <details>
+        <summary>¿A nombre de quién quedan el dominio y las cuentas?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">A tu nombre. Tu dirección web, tu tienda y tus accesos son tuyos; nosotros trabajamos con nuestras propias cuentas de colaborador.</p>
+      </details>
+      <details>
+        <summary>¿Y si quiero cambiar algo después?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">Lo del día a día (productos, precios, fotos, textos) lo puedes hacer tú con el manual. Si es algo más grande, como una sección nueva, lo vemos juntos.</p>
+      </details>
+      <details>
+        <summary>¿Trabajan con negocios fuera de Chimbote?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">Sí. Trabajamos a distancia: conversamos por videollamada y te mostramos los avances en línea.</p>
+      </details>
+    </div>
   </div>
 </section>
 
@@ -448,87 +567,57 @@
   <img class="bg-mark" src="assets/img/amaui-logo.png" width="1024" height="1024" alt="">
   <div class="wrap reveal" style="position:relative">
     <span class="eyebrow">07 — Contacto</span>
-    <h2 style="margin-top:20px">¿Hablamos de <em class="serif">tu web?</em></h2>
-    <p>Cuéntanos qué necesitas y te enviamos una cotización sin compromiso.</p>
-    <div class="links" id="contact-links"></div>
+    <h2 style="margin-top:20px">¿Hablamos de <em>tu web?</em></h2>
+    <p>Cuéntanos de tu negocio y te respondemos con una propuesta y una cotización sin compromiso.</p>
+    <div class="links" id="contact-links"><a class="btn" href="mailto:hola@amaui.dev">hola@amaui.dev</a></div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>© <span id="year"></span> AMAUI</span>
-    <span>Diseño web · Desarrollo web · Experiencias digitales</span>
+    <span>© <span id="year">2026</span> AMAUI · Chimbote, Perú</span>
+    <span>Páginas web · Tiendas online · Rediseños</span>
   </div>
 </footer>
 
 <script>
-  // Datos de contacto: completar antes de publicar. Los vacíos no se muestran.
+  // ── Datos del equipo: completar aquí. Lo que quede vacío no se muestra o usa un texto por defecto. ──
   const CONTACT = {
     whatsapp: "",   // solo números con código de país, p. ej. "51987654321"
     email: "hola@amaui.dev",
     instagram: ""   // usuario sin @
   };
-
-  // Fuente: perfiles de LinkedIn de cada integrante (revisados el 26/10/2026)
-  const TEAM = [
-    {
-      name: "Aldair Pacherrez",
-      role: "Cofundador · Product Manager",
-      photo: "assets/img/team-aldair.jpg",
-      bio: "Lidera la planificación y el producto: requerimientos, historias de usuario, sprints, QA funcional y documentación. Coordinó la migración de Petite Lune a Shopify.",
-      highlights: ["Finalista del Científica AI Battle 2026 (32 de más de 330)", "Aspire Leaders Program 2026 (Harvard Business School)", "Área de Proyectos en START Perú"],
-      skills: ["Scrum", "Gestión de proyectos", "QA funcional", "Figma", "Notion"],
-      linkedin: "https://www.linkedin.com/in/aldairpacherrez/"
-    },
-    {
-      name: "Jean Carlos Anderson Espinoza",
-      role: "Cofundador · UX/UI Lead & Frontend",
-      photo: "assets/img/team-anderson.jpg",
-      bio: "Diseña interfaces centradas en el usuario y lidera el frontend de nuestras webs y apps. Llevó el diseño UX/UI de AMAY, pensado para personas mayores de 50 años.",
-      highlights: ["Aspire Leaders Program, Cohort 3", "Analista y desarrollador en INCAD Service", "Prototipos validados con pruebas de usabilidad"],
-      skills: ["Figma", "React", "Next.js", "Angular", "Spring Boot"],
-      linkedin: "https://www.linkedin.com/in/anderson-espinoza/"
-    },
-    {
-      name: "Jose Hurtado Rivas",
-      role: "Backend · Arquitectura",
-      photo: "assets/img/team-jose.jpg",
-      bio: "Construye APIs seguras y fáciles de mantener, y define la viabilidad técnica de cada proyecto. Ha trabajado en sistemas para el sector público peruano.",
-      highlights: ["START Hack 2026 en St. Gallen, Suiza", "Semifinalista Top 5 del Hult Prize UPN 2026", "Cofundador de Java Lima y Codex Community Perú; speaker en DevFest y Build With AI"],
-      skills: ["Java", "Spring Boot", "NestJS", "Docker", "GitOps", "Azure"],
-      linkedin: "https://www.linkedin.com/in/jose-hurtado-rivas-8150b0231/"
-    }
-  ];
+  const OFFERS = {   // precio «desde» en soles y plazo aproximado, p. ej. { desde: "800", plazo: "2 a 3 semanas" }
+    pagina:  { desde: "", plazo: "" },
+    tienda:  { desde: "", plazo: "" },
+    mudanza: { desde: "", plazo: "" }
+  };
+  const SUPPORT_DAYS = "";   // días de soporte incluidos tras publicar, p. ej. "30"
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const team = document.getElementById("team");
-  TEAM.forEach(m => {
-    const el = document.createElement("article");
-    el.className = "member reveal";
-    el.innerHTML = `
-      <div class="photo"><img src="${m.photo}" width="400" height="400" alt="${m.name}" loading="lazy"></div>
-      <div class="body">
-        <div><h3>${m.name}</h3><span class="role">${m.role}</span></div>
-        <p>${m.bio}</p>
-        <ul class="hl">${m.highlights.map(h => `<li>${h}</li>`).join("")}</ul>
-        <div class="skills">${m.skills.map(s => `<span>${s}</span>`).join("")}</div>
-        <a class="li" href="${m.linkedin}" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
-      </div>`;
-    team.appendChild(el);
+  // Ofertas y soporte
+  Object.entries(OFFERS).forEach(([k, o]) => {
+    if (o.desde) document.querySelector(`[data-price="${k}"]`).textContent = `Desde S/ ${o.desde}`;
+    if (o.plazo) document.querySelector(`[data-time="${k}"]`).textContent = `Plazo aprox.: ${o.plazo}`;
   });
+  if (SUPPORT_DAYS) document.querySelector("[data-support]").textContent = `Incluye ${SUPPORT_DAYS} días de soporte después de publicar para resolver tus dudas.`;
 
-  const links = document.getElementById("contact-links");
+  // Contacto: con WhatsApp, los botones principales llevan directo a la conversación
+  const waLink = CONTACT.whatsapp && `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("Hola AMAUI, quiero una web para mi negocio.")}`;
+  if (waLink) document.querySelectorAll("[data-cta]").forEach(a => {
+    a.href = waLink; a.target = "_blank"; a.rel = "noopener";
+    if (a.hasAttribute("data-cta-long")) a.firstChild.textContent = "Escríbenos por WhatsApp ";
+  });
   const items = [];
-  if (CONTACT.whatsapp) items.push(`<a class="btn" href="https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("Hola AMAUI, quiero cotizar una página web.")}" target="_blank" rel="noopener">Escríbenos por WhatsApp <span class="arrow">→</span></a>`);
-  if (CONTACT.email) items.push(`<a class="btn ghost" href="mailto:${CONTACT.email}">${CONTACT.email}</a>`);
+  if (waLink) items.push(`<a class="btn" href="${waLink}" target="_blank" rel="noopener">Escríbenos por WhatsApp <span class="arrow">→</span></a>`);
+  if (CONTACT.email) items.push(`<a class="btn ${waLink ? "ghost" : ""}" href="mailto:${CONTACT.email}">${CONTACT.email}</a>`);
   if (CONTACT.instagram) items.push(`<a class="btn ghost" href="https://instagram.com/${CONTACT.instagram}" target="_blank" rel="noopener">@${CONTACT.instagram}</a>`);
-  links.innerHTML = items.length ? items.join("") : `<span class="pending">Datos de contacto por confirmar</span>`;
+  if (items.length) document.getElementById("contact-links").innerHTML = items.join("");
 
-  // Barra de navegación
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const nav = document.getElementById("nav");
-  const onScroll = () => nav.classList.toggle("scrolled", scrollY > 20);
-  addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
   // Menú móvil
   const toggle = nav.querySelector(".menu-toggle");
@@ -541,30 +630,122 @@
   nav.querySelectorAll("#menu a").forEach(a => a.addEventListener("click", () => setMenu(false)));
   addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("open")) { setMenu(false); toggle.focus(); } });
 
-  // Revelado al hacer scroll
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll(".reveal").forEach((el, i) => {
-    el.style.transitionDelay = `${(i % 4) * 70}ms`;
-    io.observe(el);
+  // Preguntas frecuentes: solo una abierta a la vez
+  const faqs = document.querySelectorAll(".faq details");
+  faqs.forEach(d => d.addEventListener("toggle", () => { if (d.open) faqs.forEach(o => { if (o !== d) o.open = false; }); }));
+
+  // Títulos palabra por palabra: el lector de pantalla lee el título completo desde aria-label
+  document.querySelectorAll("section h2").forEach(h => h.classList.add("split"));
+  document.querySelectorAll(".split").forEach(h => {
+    h.setAttribute("aria-label", h.textContent.trim());
+    let i = 0;
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 1) return walk(n);
+      if (n.nodeType !== 3) return;
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) return frag.append(" ");
+        const w = document.createElement("span"), s = document.createElement("span");
+        w.className = "w"; w.setAttribute("aria-hidden", "true");
+        s.textContent = part; s.style.setProperty("--i", i++);
+        w.append(s); frag.append(w);
+      });
+      n.replaceWith(frag);
+    });
+    walk(h);
   });
 
-  // Texto que se escribe en el hero
-  const words = ["<idea>", "<design />", "<development />", "<experience />"];
-  const typed = document.getElementById("typed");
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) { typed.textContent = words[3]; }
-  else {
-    let w = 0, c = 0, back = false;
-    (function tick() {
-      const word = words[w];
-      typed.textContent = word.slice(0, c);
-      if (!back && c < word.length) { c++; setTimeout(tick, 70); }
-      else if (!back) { back = true; setTimeout(tick, 1400); }
-      else if (c > 0) { c--; setTimeout(tick, 35); }
-      else { back = false; w = (w + 1) % words.length; setTimeout(tick, 300); }
-    })();
+  // Escalonado por grupo: los hermanos entran uno tras otro, cada grupo empieza de cero
+  const groups = new Map();
+  document.querySelectorAll(".reveal, .reveal-img").forEach(el => {
+    const n = groups.get(el.parentElement) || 0;
+    groups.set(el.parentElement, n + 1);
+    el.style.setProperty("--d", `${Math.min(n, 5) * 80}ms`);
+  });
+
+  // Cifras que cuentan hasta su valor
+  const countUp = el => {
+    if (reduce) return;
+    const to = +el.dataset.count, t0 = performance.now(), dur = 1400;
+    const tick = t => {
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 4)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("in");
+    io.unobserve(e.target);
+    if (e.target.dataset.count) countUp(e.target);
+  }), { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+  new Set(document.querySelectorAll(".reveal, .reveal-img, section .split, [data-count]")).forEach(el => io.observe(el));
+
+  // Entrada del hero
+  const hero = document.querySelector(".hero");
+  const heroTitle = hero.querySelector("h1");
+  heroTitle.style.setProperty("--d", "200ms");
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    hero.classList.add("ready");
+    heroTitle.classList.add("in");
+  }));
+
+  // Celular del hero: recorre la portada real de Petite Lune, ida y vuelta
+  const screen = document.querySelector(".phone-screen");
+  const page = document.getElementById("phone-page");
+  const setTravel = () => screen.style.setProperty("--travel", `${Math.max(page.offsetHeight - screen.offsetHeight, 0)}px`);
+  if (!reduce) {
+    const start = () => { setTravel(); screen.classList.add("scrolling"); };
+    page.complete ? start() : page.addEventListener("load", start);
+    addEventListener("resize", setTravel);
+  }
+
+  // Un solo manejador de scroll por fotograma: barra de progreso, menú y logo del cierre
+  const progress = document.querySelector(".progress");
+  const bgMark = document.querySelector(".bg-mark");
+  let lastY = scrollY, ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    nav.classList.toggle("scrolled", y > 20);
+    if (Math.abs(y - lastY) > 6) {
+      const hide = y > lastY && y > innerHeight * .8 && !nav.classList.contains("open") && !nav.contains(document.activeElement);
+      nav.classList.toggle("hidden", hide);
+      lastY = y;
+    }
+    if (!reduce) bgMark.style.setProperty("--spin", `${(y / Math.max(max, 1)) * 40}deg`);
+  };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+
+  // Efectos de puntero, solo con ratón y sin movimiento reducido
+  if (finePointer && !reduce) {
+    const proof = hero.querySelector(".hero-proof");
+    hero.addEventListener("pointermove", e => {
+      proof.style.setProperty("--px", `${(e.clientX / innerWidth - .5) * 20}px`);
+      proof.style.setProperty("--py", `${(e.clientY / innerHeight - .5) * 20}px`);
+    });
+    hero.addEventListener("pointerleave", () => { proof.style.setProperty("--px", "0px"); proof.style.setProperty("--py", "0px"); });
+
+    document.querySelectorAll(".offer").forEach(s => s.addEventListener("pointermove", e => {
+      const r = s.getBoundingClientRect();
+      s.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      s.style.setProperty("--my", `${e.clientY - r.top}px`);
+    }));
+
+    document.querySelectorAll(".member").forEach(m => {
+      const card = m.querySelector(".card");
+      m.addEventListener("pointermove", e => {
+        const r = m.getBoundingClientRect();
+        card.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - .5) * 6}deg`);
+        card.style.setProperty("--rx", `${-((e.clientY - r.top) / r.height - .5) * 6}deg`);
+      });
+      m.addEventListener("pointerleave", () => { card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg"); });
+    });
   }
 </script>
 </body>
