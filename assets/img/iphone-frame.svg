@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 319 636" width="319" height="636">
+  <!-- iPhone morado oscuro redibujado en vector a partir del mockup de Aldair (cuerpo 311×636).
+       La pantalla (x16 y15 279×606 r32) queda transparente para poner la página debajo. -->
+  <defs>
+    <linearGradient id="edge" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#4a3d4e"/>
+      <stop offset=".02" stop-color="#a895ac"/>
+      <stop offset=".05" stop-color="#5e4e62"/>
+      <stop offset=".5" stop-color="#6a5a6e"/>
+      <stop offset=".95" stop-color="#5e4e62"/>
+      <stop offset=".98" stop-color="#a895ac"/>
+      <stop offset="1" stop-color="#4a3d4e"/>
+    </linearGradient>
+    <linearGradient id="btn" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#6d5d70"/>
+      <stop offset=".5" stop-color="#4b3e4e"/>
+      <stop offset="1" stop-color="#6d5d70"/>
+    </linearGradient>
+    <radialGradient id="lens" cx=".4" cy=".35" r=".7">
+      <stop offset="0" stop-color="#2c4a7a"/>
+      <stop offset=".6" stop-color="#0c1526"/>
+      <stop offset="1" stop-color="#05070c"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Botones laterales: acción, volumen +, volumen − y encendido -->
+  <rect x="-3.2" y="100" width="4" height="25" rx="1.6" fill="url(#btn)"/>
+  <rect x="-3.2" y="146" width="4" height="48" rx="1.6" fill="url(#btn)"/>
+  <rect x="-3.2" y="207" width="4" height="48" rx="1.6" fill="url(#btn)"/>
+  <rect x="310.2" y="163" width="4" height="75" rx="1.6" fill="url(#btn)"/>
+
+  <!-- Marco de titanio con el hueco de la pantalla -->
+  <path fill="url(#edge)" fill-rule="evenodd" d="
+    M44 0H267A44 44 0 0 1 311 44V592A44 44 0 0 1 267 636H44A44 44 0 0 1 0 592V44A44 44 0 0 1 44 0Z
+    M48 15H263A32 32 0 0 1 295 47V589A32 32 0 0 1 263 621H48A32 32 0 0 1 16 589V47A32 32 0 0 1 48 15Z"/>
+  <!-- Bisel negro -->
+  <path fill="#0d0c0e" fill-rule="evenodd" d="
+    M44 5.5H267A38.5 38.5 0 0 1 305.5 44V592A38.5 38.5 0 0 1 267 630.5H44A38.5 38.5 0 0 1 5.5 592V44A38.5 38.5 0 0 1 44 5.5Z
+    M48 15H263A32 32 0 0 1 295 47V589A32 32 0 0 1 263 621H48A32 32 0 0 1 16 589V47A32 32 0 0 1 48 15Z"/>
+  <!-- Brillo fino del borde exterior y línea interior del bisel -->
+  <rect x=".75" y=".75" width="309.5" height="634.5" rx="43.3" fill="none" stroke="#c9b8cc" stroke-opacity=".7" stroke-width="1"/>
+  <rect x="5.5" y="5.5" width="300" height="625" rx="38.5" fill="none" stroke="#000" stroke-width="1"/>
+  <rect x="15.5" y="14.5" width="280" height="607" rx="32.5" fill="none" stroke="#000" stroke-width="1"/>
+
+  <!-- Dynamic Island con la cámara -->
+  <rect x="120" y="24" width="68" height="20" rx="10" fill="#000"/>
+  <circle cx="177" cy="34" r="4.2" fill="url(#lens)"/>
+  <circle cx="175.8" cy="32.8" r="1.1" fill="#7aa2e0" fill-opacity=".55"/>
+</svg>

@@ -146,16 +146,16 @@
 
   /* Celular con la tienda real de Petite Lune, dentro del mockup de iPhone (512×908).
      Todas las medidas en cqw (ancho del dispositivo) para que pantalla, barra e isla escalen juntas. */
-  .device { position: relative; width: clamp(230px, min(24vw, 38svh), 310px); aspect-ratio: 512 / 908; container-type: inline-size; margin-bottom: -40px; /* el PNG incluye la sombra inferior */ }
-  .device-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-  .device-screen { position: absolute; left: 18.75cqw; top: 12.5cqw; width: 62.5cqw; height: 135.9cqw; border-radius: 7.2cqw; overflow: hidden; background: #fff; z-index: 1; }
+  .device { position: relative; width: clamp(180px, min(17vw, 27svh), 232px); aspect-ratio: 319 / 636; container-type: inline-size; }
+  .device-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 28px rgba(255,255,255,.07)); }
+  .device-screen { position: absolute; left: 6.27cqw; top: 4.702cqw; width: 87.461cqw; height: 189.969cqw; border-radius: 10.031cqw; overflow: hidden; background: #fff; z-index: 1; }
   /* Barra de estado de iOS: hora a la izquierda de la isla, señal, wifi y batería a la derecha */
-  .device-status { position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 8.6cqw; background: #fff; display: grid; grid-template-columns: 22.85cqw 16.4cqw 1fr; align-items: center; color: #000; }
-  .device-status .time { justify-self: center; font: 600 3.3cqw/1 var(--sans); letter-spacing: -.01em; }
-  .device-status .icons { grid-column: 3; justify-self: center; display: flex; gap: 1.1cqw; align-items: center; }
-  .device-status svg { height: 2.3cqw; width: auto; fill: #000; }
+  .device-status { position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 11.912cqw; background: #fff; display: grid; grid-template-columns: 32.602cqw 21.317cqw 1fr; align-items: center; color: #000; }
+  .device-status .time { justify-self: center; font: 600 4.6cqw/1 var(--sans); letter-spacing: -.01em; }
+  .device-status .icons { grid-column: 3; justify-self: center; display: flex; gap: 1.5cqw; align-items: center; }
+  .device-status svg { height: 3.2cqw; width: auto; fill: #000; }
   /* La página empieza debajo de la barra de estado, así la isla no tapa la cabecera de la tienda */
-  .device-screen .page { position: absolute; top: 8.6cqw; left: 0; width: 100%; height: auto; will-change: transform; }
+  .device-screen .page { position: absolute; top: 11.912cqw; left: 0; width: 100%; height: auto; will-change: transform; }
   .device-screen.scrolling .page { animation: phone-scroll 72s cubic-bezier(.45, 0, .55, 1) 1.6s infinite alternate; }
   .device:hover .device-screen .page { animation-play-state: paused; }
   @keyframes phone-scroll { to { transform: translate3d(0, calc(var(--travel, 0px) * -1), 0); } }
@@ -191,9 +191,9 @@
   .dev-ipad .screen { left: 5.922cqw; top: 6.191cqw; width: 87.887cqw; height: 126.51cqw; border-radius: 2.2cqw; }
   .dev-ipad .bar { height: 3.2cqw; background: #fff; padding: 0 3.4cqw; font: 600 1.9cqw/1 var(--sans); color: #000; }
   .dev-ipad .page { top: 3.2cqw; }
-  .dev-iphone { left: 85cqw; top: 26.6cqw; width: 14cqw; aspect-ratio: 512 / 908; z-index: 3; }
-  .dev-iphone .screen { left: 18.75cqw; top: 12.5cqw; width: 62.5cqw; height: 135.9cqw; border-radius: 7.2cqw; }
-  .dev-iphone .page { top: 8.6cqw; }
+  .dev-iphone { left: 87.3cqw; top: 28.7cqw; width: 9.6cqw; aspect-ratio: 319 / 636; z-index: 3; }
+  .dev-iphone .screen { left: 6.27cqw; top: 4.702cqw; width: 87.461cqw; height: 189.969cqw; border-radius: 10.031cqw; }
+  .dev-iphone .page { top: 11.912cqw; }
   .dev svg { fill: #000; }
   .dev-ipad .bar svg { height: 1.5cqw; width: auto; }
   .showcase.playing .screen .page { animation: phone-scroll var(--dur, 60s) cubic-bezier(.45, 0, .55, 1) var(--delay, 0s) infinite alternate; }
@@ -204,7 +204,7 @@
     .showcase { aspect-ratio: 100 / 124; }
     .dev-mac { top: 0; width: 100cqw; }
     .dev-ipad { left: 6cqw; top: 64cqw; width: 42cqw; }
-    .dev-iphone { left: 58cqw; top: 77cqw; width: 30cqw; }
+    .dev-iphone { left: 62cqw; top: 74.4cqw; width: 24cqw; }
   }
 
   /* Botón flotante de WhatsApp: aparece al dejar atrás el inicio */
@@ -425,7 +425,7 @@
             </div>
             <img class="page" id="phone-page" src="assets/img/pl-mob_home_long.webp" width="640" height="10338" alt="">
           </div>
-          <img class="device-frame" src="assets/img/iphone-frame.webp" width="512" height="908" alt="">
+          <img class="device-frame" src="assets/img/iphone-frame.svg" width="319" height="636" alt="">
         </div>
       </div>
       <a href="#trabajo" class="proof-link intro" style="--d:1100ms"><span><b>petitelune.pe</b> · tienda hecha por AMAUI</span> <span class="arrow">↓</span></a>
@@ -492,7 +492,7 @@
           </div>
           <img class="page" src="assets/img/pl-phone_producto.webp" width="640" height="5251" alt="" loading="lazy" style="--dur:56s;--delay:1.6s">
         </div>
-        <img class="frame" src="assets/img/iphone-frame.webp" width="512" height="908" alt="" loading="lazy">
+        <img class="frame" src="assets/img/iphone-frame.svg" width="319" height="636" alt="" loading="lazy">
       </div>
     </div>
 
