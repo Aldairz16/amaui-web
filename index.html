@@ -116,8 +116,13 @@
 
   /* Celular con la tienda real de Petite Lune */
   .phone-frame { width: clamp(200px, min(22vw, 34svh), 280px); aspect-ratio: 9 / 19; border-radius: 38px; border: 1px solid var(--line-2); padding: 10px; background: #111; box-shadow: 0 40px 100px rgba(0,0,0,.7), 0 0 80px rgba(255,255,255,.05), inset 0 0 0 1px rgba(255,255,255,.04); }
-  .phone-screen { position: relative; height: 100%; border-radius: 28px; overflow: hidden; background: #fff; }
-  .phone-screen img { position: absolute; top: 0; left: 0; width: 100%; height: auto; will-change: transform; }
+  .phone-screen { --bar: 36px; position: relative; height: 100%; border-radius: 28px; overflow: hidden; background: #fff; }
+  /* La página empieza debajo de la barra de estado, así la isla no tapa la cabecera de la tienda */
+  .phone-screen img { position: absolute; top: var(--bar); left: 0; width: 100%; height: auto; will-change: transform; }
+  .phone-status { position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: var(--bar); background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 18px 0 22px; font: 600 11px/1 var(--sans); color: #111; letter-spacing: .01em; }
+  .phone-status i { display: inline-flex; gap: 4px; align-items: center; }
+  .phone-status i::before { content: ""; width: 14px; height: 8px; background: linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 6px, transparent 6px 8px, #111 8px 10px, transparent 10px 12px, #111 12px 14px); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+  .phone-status i::after { content: ""; width: 20px; height: 9px; border: 1.2px solid #111; border-radius: 3px; box-shadow: inset -6px 0 0 #fff, inset 0 0 0 1px #fff; background: #111; }
   .phone-screen::before { content: ""; position: absolute; z-index: 2; top: 8px; left: 50%; width: 72px; height: 20px; margin-left: -36px; border-radius: 999px; background: #111; }
   .phone-screen.scrolling img { animation: phone-scroll 46s cubic-bezier(.45, 0, .55, 1) 1.6s infinite alternate; }
   .phone-frame:hover .phone-screen img { animation-play-state: paused; }
@@ -329,7 +334,7 @@
     <div class="hero-proof">
       <div class="phone-in">
         <div class="phone-frame" role="img" aria-label="La tienda online de Petite Lune vista en un celular">
-          <div class="phone-screen"><img id="phone-page" src="assets/img/pl-mob_home_long.jpg" width="420" height="4307" alt=""></div>
+          <div class="phone-screen"><div class="phone-status" aria-hidden="true"><span>9:41</span><i></i></div><img id="phone-page" src="assets/img/pl-mob_home_long.jpg" width="420" height="4307" alt=""></div>
         </div>
       </div>
       <a href="#trabajo" class="proof-link intro" style="--d:1100ms"><span><b>petitelune.pe</b> · tienda hecha por AMAUI</span> <span class="arrow">↓</span></a>
@@ -696,7 +701,7 @@
   // Celular del hero: recorre la portada real de Petite Lune, ida y vuelta
   const screen = document.querySelector(".phone-screen");
   const page = document.getElementById("phone-page");
-  const setTravel = () => screen.style.setProperty("--travel", `${Math.max(page.offsetHeight - screen.offsetHeight, 0)}px`);
+  const setTravel = () => screen.style.setProperty("--travel", `${Math.max(page.offsetHeight + page.offsetTop - screen.offsetHeight, 0)}px`);
   if (!reduce) {
     const start = () => { setTravel(); screen.classList.add("scrolling"); };
     page.complete ? start() : page.addEventListener("load", start);
