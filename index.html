@@ -286,8 +286,10 @@
   /* Revelado al hacer scroll. Solo se oculta si JS está activo, así el contenido nunca queda invisible */
   .js .reveal { opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); transition-delay: var(--d, 0ms); }
   .js .reveal.in { opacity: 1; transform: none; }
-  .js .reveal-img { clip-path: inset(0 0 100% 0 round 14px); transition: clip-path 1.1s var(--ease); transition-delay: var(--d, 0ms); }
-  .js .reveal-img.in { clip-path: inset(0 0 0 0 round 14px); }
+  /* El recorte va en el hijo, no en el elemento observado: Chrome descuenta el clip-path del área
+     que mide IntersectionObserver, y un elemento recortado al 100 % nunca se daría por visible. */
+  .js .reveal-img > * { clip-path: inset(0 0 100% 0 round 14px); transition: clip-path 1.1s var(--ease); transition-delay: var(--d, 0ms); }
+  .js .reveal-img.in > * { clip-path: inset(0 0 0 0 round 14px); }
   .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
   .w > span { display: inline-block; transition: transform var(--t-slow) var(--ease); transition-delay: calc(var(--i, 0) * 45ms + var(--d, 0ms)); }
   .js .split:not(.in) .w > span { transform: translate3d(0, 105%, 0); }
@@ -332,7 +334,7 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .js .reveal, .js .hero .intro, .js .hero .phone-in, .js .hero .scroll-hint { opacity: 1; }
     .js .reveal, .js .hero .intro, .js .hero .phone-in { transform: none; }
-    .js .reveal-img { clip-path: none; }
+    .js .reveal-img > * { clip-path: none; }
     .js .split .w > span { transform: none; }
     .progress { display: none; }
   }
@@ -410,13 +412,15 @@
       <img class="pl" src="assets/img/pl-wordmark.png" width="1810" height="256" alt="Petite Lune">
     </div>
 
-    <div class="case-browser reveal-img">
-      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">petitelune.pe</span></div>
-      <img src="assets/img/pl-desk_home_hero.webp" width="1600" height="953" alt="Portada de la tienda online de Petite Lune" loading="lazy">
+    <div class="reveal-img">
+      <div class="case-browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">petitelune.pe</span></div>
+        <img src="assets/img/pl-desk_home_hero.webp" width="1600" height="953" alt="Portada de la tienda online de Petite Lune" loading="lazy">
+      </div>
     </div>
     <div class="case-gallery">
-      <img class="reveal-img" src="assets/img/pl-desk_producto_mate.webp" width="1600" height="953" alt="Ficha del Memory Journal Texturizado en petitelune.pe" loading="lazy">
-      <img class="reveal-img" src="assets/img/pl-desk_coleccion_memory.webp" width="1600" height="953" alt="Colección Memory Journal de Petite Lune" loading="lazy">
+      <div class="reveal-img"><img src="assets/img/pl-desk_producto_mate.webp" width="1600" height="953" alt="Ficha del Memory Journal Texturizado en petitelune.pe" loading="lazy"></div>
+      <div class="reveal-img"><img src="assets/img/pl-desk_coleccion_memory.webp" width="1600" height="953" alt="Colección Memory Journal de Petite Lune" loading="lazy"></div>
     </div>
 
     <div class="case-body">
