@@ -78,7 +78,7 @@
   h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -.02em; line-height: 1.05; }
   h2 { font-size: clamp(34px, 5.2vw, 64px); }
   h2 em, h1 em, h3 em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -.01em; }
-  section { padding: clamp(80px, 12vw, 160px) 0; border-top: 1px solid var(--line); scroll-margin-top: 68px; }
+  section { padding: clamp(72px, 9vw, 128px) 0; border-top: 1px solid var(--line); scroll-margin-top: 68px; }
   :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 4px; }
   .skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--fg); color: var(--bg); padding: 12px 18px; border-radius: 8px; text-decoration: none; font-weight: 500; }
   .skip:focus { top: 12px; }
@@ -217,7 +217,7 @@
   /* Cinta de tipos de negocio */
   .marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; padding: 22px 0; }
   .marquee-track { display: flex; gap: 48px; width: max-content; animation: slide 40s linear infinite; }
-  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee:hover .marquee-track, .marquee.offscreen .marquee-track, .offscreen .page { animation-play-state: paused; }
   .marquee span { font-family: var(--serif); font-style: italic; font-size: clamp(26px, 3.4vw, 40px); color: var(--muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 48px; }
   .marquee span::after { content: ""; width: 10px; height: 10px; border: 1px solid var(--dim); transform: rotate(45deg); }
   @keyframes slide { to { transform: translateX(-50%); } }
@@ -226,13 +226,12 @@
   .case-top { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
   .case-top .pl { width: min(300px, 70vw); filter: invert(1); opacity: .92; }
   .case-body { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(32px, 6vw, 96px); margin-top: clamp(48px, 7vw, 88px); align-items: start; }
-  .case-body p { color: var(--muted); margin: 18px 0 28px; }
+  .case-body p { color: var(--muted); margin: 0 0 28px; font-size: 18px; max-width: 460px; }
   .results { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
   .result { background: var(--bg); padding: 26px 24px; }
   .result b { display: block; font-size: clamp(36px, 4vw, 52px); font-weight: 500; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
   .result b.word { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
-  .result p { margin: 12px 0 0; color: var(--fg); font-size: 15px; line-height: 1.45; }
-  .result small { display: block; margin-top: 6px; color: var(--muted); font-size: 14px; line-height: 1.4; }
+  .result p { margin: 12px 0 0; color: var(--muted); font-size: 15px; line-height: 1.45; }
 
   /* Ofertas */
   .offers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -245,9 +244,7 @@
   .offer .num { font-family: var(--mono); font-size: 13px; color: var(--dim); }
   .offer h3 { font-size: clamp(24px, 2.4vw, 30px); transition: transform var(--t-mid) var(--ease); }
   .offer:hover h3 { transform: translateX(4px); }
-  .offer .lede { color: var(--muted); margin: 0; }
-  .offer .ideal { font-size: 14px; color: var(--muted); border-left: 1px solid var(--line-2); padding-left: 12px; margin: 0; }
-  .offer .ideal b { color: var(--fg); font-weight: 500; }
+  .offer .ideal { font-size: 15px; color: var(--muted); margin: -6px 0 0; }
   .offer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 15px; }
   .offer li { padding-left: 24px; position: relative; }
   .offer li::before { content: ""; position: absolute; left: 2px; top: .45em; width: 9px; height: 5px; border-left: 1.5px solid var(--fg); border-bottom: 1.5px solid var(--fg); transform: rotate(-45deg); }
@@ -256,12 +253,12 @@
   .offer .time { font-size: 14px; color: var(--muted); }
 
   /* Qué te llevas */
-  .keeps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
-  .keep { background: var(--bg); padding: 32px 28px 36px; }
-  .keep svg { width: 28px; height: 28px; stroke: var(--fg); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--t-slow) var(--ease); }
-  .keep:hover svg { transform: translateY(-3px) rotate(-6deg); }
-  .keep h3 { font-size: 21px; margin: 26px 0 10px; line-height: 1.2; }
-  .keep p { color: var(--muted); margin: 0; font-size: 15px; }
+  .keeps-title { margin: clamp(40px, 5vw, 56px) 0 16px; }
+  .keeps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .keep { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; font-size: 15px; line-height: 1.35; transition: border-color var(--t-mid); }
+  .keep:hover { border-color: var(--line-2); }
+  .keep svg { flex: none; width: 24px; height: 24px; stroke: var(--fg); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--t-slow) var(--ease); }
+  .keep:hover svg { transform: rotate(-8deg) scale(1.08); }
 
   /* Proceso */
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -289,14 +286,12 @@
   .member .li:hover { color: var(--fg); }
 
   /* Sellos de logros */
-  .seals-title { margin: clamp(56px, 7vw, 88px) 0 24px; }
-  .seals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; list-style: none; padding: 0; margin: 0; }
+
+  .seals { margin-top: clamp(40px, 5vw, 56px); display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; list-style: none; padding: 0; }
   .seal { border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 10px; align-content: start; }
   .seal .badge { justify-self: start; font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; background: var(--fg); color: var(--bg); border-radius: 999px; padding: 4px 12px; }
   .seal h3 { font-size: 20px; line-height: 1.25; }
   .seal p { color: var(--muted); margin: 0; font-size: 14px; }
-  .labs { margin: 24px 0 0; color: var(--muted); font-size: 15px; max-width: 760px; }
-  .labs b { color: var(--fg); font-weight: 500; }
 
   /* Preguntas frecuentes */
   .faq { border-top: 1px solid var(--line); max-width: 880px; }
@@ -325,10 +320,6 @@
   /* Revelado al hacer scroll. Solo se oculta si JS está activo, así el contenido nunca queda invisible */
   .js .reveal { opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); transition-delay: var(--d, 0ms); }
   .js .reveal.in { opacity: 1; transform: none; }
-  /* El recorte va en el hijo, no en el elemento observado: Chrome descuenta el clip-path del área
-     que mide IntersectionObserver, y un elemento recortado al 100 % nunca se daría por visible. */
-  .js .reveal-img > * { clip-path: inset(0 0 100% 0 round 14px); transition: clip-path 1.1s var(--ease); transition-delay: var(--d, 0ms); }
-  .js .reveal-img.in > * { clip-path: inset(0 0 0 0 round 14px); }
   .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
   .w > span { display: inline-block; transition: transform var(--t-slow) var(--ease); transition-delay: calc(var(--i, 0) * 45ms + var(--d, 0ms)); }
   .js .split:not(.in) .w > span { transform: translate3d(0, 105%, 0); }
@@ -361,9 +352,20 @@
   }
   @media (max-width: 640px) {
     .team { grid-template-columns: 1fr; }
+    .member .card { flex-direction: row; }
+    .member .photo { flex: none; width: 112px; aspect-ratio: auto; }
+    .member .body { padding: 16px 18px; gap: 8px; }
+    .member h3 { font-size: 18px; }
+    .member .li { min-height: 44px; }
+    .keeps { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
-    .keeps, .steps, .results { grid-template-columns: 1fr; }
+    .steps, .results { grid-template-columns: 1fr; }
+    /* Pasos compactos: número al lado del texto */
+    .step { display: grid; grid-template-columns: 52px 1fr; column-gap: 12px; align-items: baseline; padding: 20px; }
+    .step .serif { grid-row: span 2; font-size: 38px; }
+    .step h3 { margin: 0 0 4px; font-size: 19px; }
+    .seal { padding: 20px; }
     .nav .btn .label-long { display: none; }
     .faq .answer { padding-right: 0; }
   }
@@ -372,7 +374,6 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .js .reveal, .js .hero .intro, .js .hero .phone-in, .js .hero .scroll-hint { opacity: 1; }
     .js .reveal, .js .hero .intro, .js .hero .phone-in { transform: none; }
-    .js .reveal-img > * { clip-path: none; }
     .js .showcase .dev { opacity: 1; transform: none; }
     .js .split .w > span { transform: none; }
     .progress { display: none; }
@@ -403,9 +404,9 @@
 <header class="hero" id="inicio">
   <div class="wrap">
     <div>
-      <span class="eyebrow intro">Diseño y desarrollo web · Chimbote, Perú</span>
+      <span class="eyebrow intro">Diseño web · Chimbote, Perú</span>
       <h1 class="split">Hacemos la web de tu negocio <em>y te enseñamos a manejarla.</em></h1>
-      <p class="lead intro" style="--d:700ms">Diseñamos tu página o tienda online, la dejamos funcionando con pagos y envíos, y te entregamos un manual y videos para que la actualices sin depender de nadie.</p>
+      <p class="lead intro" style="--d:700ms">Páginas y tiendas online listas para vender, con un manual y videos para que tú mismo las actualices.</p>
       <div class="ctas intro" style="--d:850ms">
         <a href="#contacto" class="btn" data-cta data-cta-long>Cotiza tu web <span class="arrow">→</span></a>
         <a href="#trabajo" class="btn ghost">Ver un caso real</a>
@@ -445,7 +446,7 @@
   <div class="wrap">
     <div class="case-top reveal">
       <div class="section-head" style="margin:0">
-        <span class="eyebrow">01 — Un caso real</span>
+        <span class="eyebrow">01 — Caso real</span>
         <h2>Una marca artesanal, <em>vendiendo en todo el Perú.</em></h2>
       </div>
       <img class="pl" src="assets/img/pl-wordmark.png" width="1810" height="256" alt="Petite Lune">
@@ -498,15 +499,14 @@
 
     <div class="case-body">
       <div class="reveal">
-        <h3 style="font-size:clamp(26px,3vw,36px)">Petite Lune</h3>
-        <p>Marca peruana de agendas y journals personalizados. Su tienda vivía en WordPress; la pasamos a Shopify, rediseñamos la experiencia de compra y dejamos a la dueña lista para manejarla por su cuenta.</p>
+        <p>Agendas y journals personalizados, hechos a mano. Pasamos su tienda de WordPress a Shopify y la dejamos lista para que la dueña la maneje sola.</p>
         <a class="btn ghost" href="https://petitelune.pe" target="_blank" rel="noopener">Visitar petitelune.pe <span class="arrow">↗</span></a>
       </div>
       <div class="results">
-        <div class="result reveal"><b data-count="113">113</b><p>No perdió sus visitas de Google al cambiar de plataforma.</p><small>Enlaces antiguos redirigidos a la tienda nueva.</small></div>
-        <div class="result reveal"><b data-count="26">26</b><p>Vende y envía a todas las regiones del Perú.</p><small>Cada región con su tarifa de envío.</small></div>
-        <div class="result reveal"><b class="word">Tarjeta</b><p>Cobra con tarjeta y Mercado Pago.</p><small>Pagos configurados y probados.</small></div>
-        <div class="result reveal"><b class="word">Autónoma</b><p>Maneja pedidos, productos y fotos sin depender de nadie.</p><small>Con un manual y videos de su propia tienda.</small></div>
+        <div class="result reveal"><b data-count="113">113</b><p>enlaces antiguos redirigidos: no perdió sus visitas de Google.</p></div>
+        <div class="result reveal"><b data-count="26">26</b><p>regiones del Perú con envío y tarifa propia.</p></div>
+        <div class="result reveal"><b class="word">Tarjeta</b><p>y Mercado Pago, configurados y probados.</p></div>
+        <div class="result reveal"><b class="word">Autónoma</b><p>maneja pedidos, productos y fotos con su manual.</p></div>
       </div>
     </div>
   </div>
@@ -515,19 +515,17 @@
 <section id="servicios">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">02 — Qué podemos hacer por ti</span>
+      <span class="eyebrow">02 — Servicios</span>
       <h2>Elige lo que tu negocio <em>necesita hoy.</em></h2>
-      <p>Te explicamos todo en simple y te enviamos la cotización por escrito antes de empezar.</p>
+      <p>Cotización por escrito antes de empezar, sin compromiso.</p>
     </div>
     <div class="offers">
       <article class="offer reveal">
         <span class="num">/01</span>
         <h3>Página para tu negocio</h3>
-        <p class="lede">Para que te encuentren en Google y te escriban directo.</p>
-        <p class="ideal"><b>Ideal para</b> restaurantes, clínicas, consultorios y profesionales.</p>
+        <p class="ideal">Restaurantes, clínicas y profesionales.</p>
         <ul>
-          <li>Quiénes son, qué ofrecen y dónde están</li>
-          <li>Botón de WhatsApp y mapa</li>
+          <li>Información, mapa y WhatsApp</li>
           <li>Se ve bien en el celular</li>
           <li>Lista para aparecer en Google</li>
         </ul>
@@ -536,26 +534,22 @@
       <article class="offer reveal">
         <span class="num">/02</span>
         <h3>Tienda online</h3>
-        <p class="lede">Para vender a cualquier hora, en cualquier parte del Perú.</p>
-        <p class="ideal"><b>Ideal para</b> marcas, emprendimientos y tiendas con productos propios.</p>
+        <p class="ideal">Marcas y emprendimientos con productos.</p>
         <ul>
           <li>Catálogo, carrito y pago en línea</li>
           <li>Tarjeta y Mercado Pago</li>
-          <li>Tarifas de envío por región</li>
-          <li>Manual y videos de tu tienda</li>
+          <li>Envíos por región</li>
         </ul>
         <div class="meta"><span class="price" data-price="tienda">Cotización a medida</span><span class="time" data-time="tienda">Plazo según tu proyecto</span></div>
       </article>
       <article class="offer reveal">
         <span class="num">/03</span>
         <h3>Mudanza o rediseño</h3>
-        <p class="lede">¿Ya tienes una web que no te funciona? La pasamos a una plataforma nueva.</p>
-        <p class="ideal"><b>Ideal para</b> negocios con una web vieja, lenta o difícil de actualizar.</p>
+        <p class="ideal">Webs viejas, lentas o difíciles de actualizar.</p>
         <ul>
           <li>Pasamos tus productos y contenido</li>
           <li>Sin perder tus visitas de Google</li>
           <li>Diseño renovado</li>
-          <li>Te enseñamos a usar la nueva</li>
         </ul>
         <div class="meta"><span class="price" data-price="mudanza">Cotización a medida</span><span class="time" data-time="mudanza">Plazo según tu proyecto</span></div>
       </article>
@@ -563,59 +557,34 @@
   </div>
 </section>
 
-<section id="te-llevas">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">03 — Qué te llevas</span>
-      <h2>Tu web es tuya, <em>de verdad.</em></h2>
-      <p>No te dejamos atado a nosotros. Cuando terminamos, todo queda en tus manos.</p>
-    </div>
-    <div class="keeps">
-      <div class="keep reveal">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M15 8l2 2"/></svg>
-        <h3>Dominio y cuentas a tu nombre</h3>
-        <p>Tu dirección web, tu tienda y tus accesos son tuyos desde el primer día.</p>
-      </div>
-      <div class="keep reveal">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12M9 8h5"/></svg>
-        <h3>Manual y videos de tu propia web</h3>
-        <p>Paso a paso, con capturas de tu web, no de un ejemplo genérico.</p>
-      </div>
-      <div class="keep reveal">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
-        <h3>Te enseñamos a usarla</h3>
-        <p>Una sesión contigo para actualizar productos, textos y fotos.</p>
-      </div>
-      <div class="keep reveal">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
-        <h3>Acompañamiento después</h3>
-        <p data-support>Seguimos cerca después de publicar para resolver tus dudas.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="proceso">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">04 — Cómo trabajamos</span>
-      <h2>De la idea a la web, <em>paso a paso.</em></h2>
+      <span class="eyebrow">03 — Cómo trabajamos</span>
+      <h2>De la idea a tu web, <em>en cuatro pasos.</em></h2>
     </div>
     <div class="steps">
-      <div class="step reveal"><span class="serif">01</span><h3>Conversamos</h3><p>Nos cuentas de tu negocio, tus clientes y lo que quieres lograr.</p></div>
-      <div class="step reveal"><span class="serif">02</span><h3>Te proponemos</h3><p>Te mostramos cómo se verá tu web y la ajustamos contigo.</p></div>
-      <div class="step reveal"><span class="serif">03</span><h3>La construimos</h3><p>La armamos y la probamos en celular y computadora antes de publicarla.</p></div>
-      <div class="step reveal"><span class="serif">04</span><h3>Te la entregamos</h3><p>Te enseñamos a manejarla y te dejamos todo a tu nombre.</p></div>
+      <div class="step reveal"><span class="serif">01</span><h3>Conversamos</h3><p>Nos cuentas qué necesita tu negocio.</p></div>
+      <div class="step reveal"><span class="serif">02</span><h3>Te proponemos</h3><p>Ves el diseño y lo ajustamos contigo.</p></div>
+      <div class="step reveal"><span class="serif">03</span><h3>La construimos</h3><p>La probamos en celular y computadora.</p></div>
+      <div class="step reveal"><span class="serif">04</span><h3>Te la entregamos</h3><p>Y te enseñamos a manejarla.</p></div>
     </div>
+    <p class="eyebrow keeps-title reveal">Al terminar, te llevas</p>
+    <ul class="keeps">
+      <li class="keep reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M15 8l2 2"/></svg><span>Dominio y cuentas a tu nombre</span></li>
+      <li class="keep reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12M9 8h5"/></svg><span>Manual y videos de tu propia web</span></li>
+      <li class="keep reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span>Una sesión para enseñarte a usarla</span></li>
+      <li class="keep reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg><span data-support>Acompañamiento después de publicar</span></li>
+    </ul>
   </div>
 </section>
 
 <section id="equipo">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">05 — Quiénes somos</span>
+      <span class="eyebrow">04 — Quiénes somos</span>
       <h2>Tres personas, <em>un mismo equipo.</em></h2>
-      <p>Nacimos como equipo en una hackatón. Hoy hacemos webs para negocios reales y seguimos compitiendo para aprender.</p>
+      <p>Nacimos en una hackatón y hoy hacemos webs para negocios reales.</p>
     </div>
     <div class="team">
       <article class="member reveal">
@@ -623,7 +592,7 @@
           <div class="photo"><img src="assets/img/team-aldair.webp" width="400" height="400" alt="Aldair Pacherrez" loading="lazy"></div>
           <div class="body">
             <div><h3>Aldair Pacherrez</h3><span class="role">Producto y proyectos</span></div>
-            <p>Organiza cada proyecto de principio a fin: entiende lo que necesitas, planifica las entregas y revisa que todo funcione antes de publicar. Coordinó la tienda de Petite Lune.</p>
+            <p>Organiza cada proyecto y revisa que todo funcione antes de publicar.</p>
             <a class="li" href="https://www.linkedin.com/in/aldairpacherrez/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
           </div>
         </div>
@@ -633,7 +602,7 @@
           <div class="photo"><img src="assets/img/team-anderson.webp" width="400" height="400" alt="Jean Carlos Anderson Espinoza" loading="lazy"></div>
           <div class="body">
             <div><h3>Jean Carlos Anderson Espinoza</h3><span class="role">Diseño y frontend</span></div>
-            <p>Diseña cómo se ve y cómo se usa tu web, y la construye para que funcione en cualquier pantalla. Diseñó AMAY, una app pensada para personas mayores de 50 años.</p>
+            <p>Diseña cómo se ve y cómo se usa tu web, en cualquier pantalla.</p>
             <a class="li" href="https://www.linkedin.com/in/anderson-espinoza/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
           </div>
         </div>
@@ -643,53 +612,47 @@
           <div class="photo"><img src="assets/img/team-jose.webp" width="400" height="400" alt="Jose Hurtado Rivas" loading="lazy"></div>
           <div class="body">
             <div><h3>Jose Hurtado Rivas</h3><span class="role">Backend y arquitectura</span></div>
-            <p>Se encarga de lo que no se ve: que tu web sea segura, rápida y fácil de mantener. Ha trabajado en sistemas para el sector público peruano.</p>
+            <p>Se asegura de que tu web sea segura, rápida y fácil de mantener.</p>
             <a class="li" href="https://www.linkedin.com/in/jose-hurtado-rivas-8150b0231/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
           </div>
         </div>
       </article>
     </div>
 
-    <p class="eyebrow seals-title reveal">Reconocimientos del equipo</p>
     <ul class="seals">
-      <li class="seal reveal"><span class="badge">Finalistas · Top 4</span><h3>Hackatón Plateada 2026</h3><p>Universidad del Pacífico con BID Lab. Más de 80 postulaciones de 26 universidades.</p></li>
-      <li class="seal reveal"><span class="badge">2.º lugar nacional</span><h3>Hackathon Ambiental UTP–NGR 2025</h3><p>Con EcoPoint, entre 36 equipos.</p></li>
-      <li class="seal reveal"><span class="badge">Fase II</span><h3>StartUp UTP 2026</h3><p>Con AMAY, nuestro proyecto de salud preventiva.</p></li>
+      <li class="seal reveal"><span class="badge">Finalistas · Top 4</span><h3>Hackatón Plateada 2026</h3><p>Entre más de 80 postulaciones de 26 universidades.</p></li>
+      <li class="seal reveal"><span class="badge">2.º lugar nacional</span><h3>Hackathon Ambiental UTP–NGR 2025</h3><p>Entre 36 equipos.</p></li>
+      <li class="seal reveal"><span class="badge">Fase II</span><h3>StartUp UTP 2026</h3><p>Con AMAY, nuestra app de salud preventiva.</p></li>
     </ul>
-    <p class="labs reveal"><b>También creamos productos propios</b> con inteligencia artificial y salud digital, como AMAY y Laboral BCP. Lo que aprendemos ahí lo aplicamos en las webs de nuestros clientes.</p>
   </div>
 </section>
 
 <section id="preguntas">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">06 — Preguntas frecuentes</span>
+      <span class="eyebrow">05 — Preguntas</span>
       <h2>Lo que nos preguntan <em>antes de empezar.</em></h2>
     </div>
     <div class="faq reveal">
       <details>
         <summary>¿Cuánto cuesta?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">Depende de lo que necesites: no cuesta lo mismo una página informativa que una tienda con pagos y envíos. Conversamos, y te enviamos la cotización por escrito antes de empezar, sin compromiso.</p>
+        <p class="answer">Depende de lo que necesites. Conversamos y te enviamos la cotización por escrito, sin compromiso.</p>
       </details>
       <details>
         <summary>¿Cuánto demora?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">Te damos el plazo junto con la cotización, según el tamaño de tu web y lo que haga falta preparar (fotos, textos, productos).</p>
+        <p class="answer">Te damos el plazo junto con la cotización, según el tamaño de tu web.</p>
       </details>
       <details>
         <summary>¿Necesito saber de tecnología?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">No. Nosotros nos encargamos de la parte técnica y, al terminar, te dejamos un manual y videos de tu propia web para que puedas actualizarla.</p>
+        <p class="answer">No. Nosotros nos encargamos de lo técnico y te dejamos un manual y videos para actualizarla.</p>
       </details>
       <details>
         <summary>¿A nombre de quién quedan el dominio y las cuentas?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">A tu nombre. Tu dirección web, tu tienda y tus accesos son tuyos; nosotros trabajamos con nuestras propias cuentas de colaborador.</p>
+        <p class="answer">A tu nombre. Nosotros trabajamos con cuentas de colaborador.</p>
       </details>
       <details>
-        <summary>¿Y si quiero cambiar algo después?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">Lo del día a día (productos, precios, fotos, textos) lo puedes hacer tú con el manual. Si es algo más grande, como una sección nueva, lo vemos juntos.</p>
-      </details>
-      <details>
-        <summary>¿Trabajan con negocios fuera de Chimbote?<span class="plus" aria-hidden="true"></span></summary>
-        <p class="answer">Sí. Trabajamos a distancia: conversamos por videollamada y te mostramos los avances en línea.</p>
+        <summary>¿Trabajan fuera de Chimbote?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="answer">Sí. Trabajamos a distancia, por videollamada y WhatsApp.</p>
       </details>
     </div>
   </div>
@@ -698,9 +661,9 @@
 <section class="contact" id="contacto">
   <img class="bg-mark" src="assets/img/amaui-logo.png" width="1024" height="1024" alt="">
   <div class="wrap reveal" style="position:relative">
-    <span class="eyebrow">07 — Contacto</span>
+    <span class="eyebrow">06 — Contacto</span>
     <h2 style="margin-top:20px">¿Hablamos de <em>tu web?</em></h2>
-    <p>Cuéntanos de tu negocio y te respondemos con una propuesta y una cotización sin compromiso.</p>
+    <p>Cuéntanos de tu negocio y te respondemos con una cotización sin compromiso.</p>
     <div class="links" id="contact-links"><a class="btn" href="mailto:hola@amaui.dev">hola@amaui.dev</a></div>
   </div>
 </section>
@@ -737,7 +700,7 @@
     if (o.desde) document.querySelector(`[data-price="${k}"]`).textContent = `Desde S/ ${o.desde}`;
     if (o.plazo) document.querySelector(`[data-time="${k}"]`).textContent = `Plazo aprox.: ${o.plazo}`;
   });
-  if (SUPPORT_DAYS) document.querySelector("[data-support]").textContent = `Incluye ${SUPPORT_DAYS} días de soporte después de publicar para resolver tus dudas.`;
+  if (SUPPORT_DAYS) document.querySelector("[data-support]").textContent = `${SUPPORT_DAYS} días de soporte después de publicar`;
 
   // Contacto: con WhatsApp, los botones principales llevan directo a la conversación
   const waLink = CONTACT.whatsapp && `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("Hola AMAUI, quiero una web para mi negocio.")}`;
@@ -796,7 +759,7 @@
 
   // Escalonado por grupo: los hermanos entran uno tras otro, cada grupo empieza de cero
   const groups = new Map();
-  document.querySelectorAll(".reveal, .reveal-img").forEach(el => {
+  document.querySelectorAll(".reveal").forEach(el => {
     const n = groups.get(el.parentElement) || 0;
     groups.set(el.parentElement, n + 1);
     el.style.setProperty("--d", `${Math.min(n, 5) * 80}ms`);
@@ -820,7 +783,7 @@
     io.unobserve(e.target);
     if (e.target.dataset.count) countUp(e.target);
   }), { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
-  new Set(document.querySelectorAll(".reveal, .reveal-img, section .split, [data-count]")).forEach(el => io.observe(el));
+  new Set(document.querySelectorAll(".reveal, section .split, [data-count]")).forEach(el => io.observe(el));
 
   // Entrada del hero
   const hero = document.querySelector(".hero");
@@ -855,12 +818,30 @@
     if (showcase.classList.contains("in")) { setShowcaseTravel(); setTimeout(() => showcase.classList.add("playing"), 1200); }
   }).observe(showcase, { attributes: true, attributeFilter: ["class"] });
 
+  // Las animaciones continuas (celulares, vitrina, cinta) se pausan fuera de pantalla
+  const offscreen = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("offscreen", !e.isIntersecting)));
+  [hero, showcase, document.querySelector(".marquee")].forEach(el => offscreen.observe(el));
+
   // Un solo manejador de scroll por fotograma: barra de progreso, menú y logo del cierre
   const progress = document.querySelector(".progress");
   const bgMark = document.querySelector(".bg-mark");
   let lastY = scrollY, ticking = false;
-  const update = () => {
+  // Red de seguridad: con un scroll muy rápido Chrome puede saltarse algún aviso del observador;
+  // lo que ya está por encima del borde inferior de la pantalla se revela igual
+  let pending = [...document.querySelectorAll(".reveal, section .split, .showcase")];
+  let lastSweep = 0;
+  const sweep = now => {
+    if (now - lastSweep < 250 || !pending.length) return;
+    lastSweep = now;
+    pending = pending.filter(el => {
+      if (el.classList.contains("in")) return false;
+      if (el.getBoundingClientRect().top < innerHeight) { el.classList.add("in"); if (el.dataset.count) countUp(el); return false; }
+      return true;
+    });
+  };
+  const update = now => {
     ticking = false;
+    sweep(now || performance.now());
     const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
     progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
     nav.classList.toggle("scrolled", y > 20);
